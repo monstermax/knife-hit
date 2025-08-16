@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import type { GameState } from '../types/game';
 import { generateLevelConfig } from '@/utils/gameUtils';
@@ -22,6 +22,16 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
     pauseGame,
     unpauseGame,
 }) => {
+
+
+    useEffect(() => {
+        if (gameState.gameStatus === 'levelComplete') {
+            const timer = setTimeout(onNextLevel, 500);
+            return () => clearTimeout(timer);
+        }
+    }, [gameState.gameStatus])
+
+
     if (gameState.gameStatus === 'menu') {
         return (
             <div className="game-over-overlay">
@@ -69,6 +79,7 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
     }
 
     if (gameState.gameStatus === 'levelComplete') {
+
         return (
             <div className="level-complete-overlay">
                 <h2 className="text-3xl font-bold mb-4 text-green-400">
@@ -90,7 +101,8 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
     if (gameState.gameStatus === 'playing' || gameState.gameStatus === 'pause') {
         // DEBUG
 
-        const levelConfig = generateLevelConfig(gameState.level);
+        //const impactAngle = (180 - gameState.targetRotation) % 360;
+        const impactAngle = (180 + gameState.targetRotation) % 360;
 
         return (
             <div style={{
@@ -101,7 +113,7 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
             }}>
                 target angle: {Math.round(gameState.targetRotation)}
                 <hr />
-                impact angle: {Math.round((180 - gameState.targetRotation) % 360)}
+                impact angle: {Math.round((180 - impactAngle) % 360)}
                 <hr />
 
                 {gameState.gameStatus === 'playing' && (

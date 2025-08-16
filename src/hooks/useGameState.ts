@@ -155,13 +155,16 @@ export const useGameState = () => {
 
             if (progress < 1) {
                 requestAnimationFrame(animate);
+
             } else {
                 // Knife has reached target
                 // Calculate everything at the exact moment of impact
                 setGameState(prev => {
                     const currentTargetRotation = prev.targetRotation;
                     // Calculate the impact angle relative to the current target rotation
-                    const impactAngle = (180 - currentTargetRotation) % 360;
+                    const impactAngle = (360 - currentTargetRotation) % 360;
+                    //const impactAngle = (180 + currentTargetRotation) % 360;
+                    //const impactAngle = currentTargetRotation % 360;
 
                     // Check collision with existing knives at impact moment
                     if (checkKnifeCollision(impactAngle, prev.plantedKnives)) {
@@ -202,6 +205,8 @@ export const useGameState = () => {
 
                 // Remove knife from throwing knives
                 setThrowingKnives(prev => prev.filter(knife => knife.id !== newKnife.id));
+
+                //pauseGame(); // DEBUG
             }
         };
 

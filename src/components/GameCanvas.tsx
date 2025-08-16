@@ -32,23 +32,30 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({
                 <TargetComponent size={GAME_CONFIG.TARGET_RADIUS * 2} />
 
                 {/* Render planted knives - only handles visible */}
-                {gameState.plantedKnives.map((knife) => (
-                    <div
-                        key={knife.id}
-                        className="absolute"
-                        style={{
-                            transform: `rotate(${knife.angle}deg) translateY(-${GAME_CONFIG.TARGET_RADIUS - 5}px)`,
-                            transformOrigin: '50% 35%',
-                            left: '50%',
-                            top: '50%',
-                            marginLeft: '-9px',
-                            marginTop: '-20px',
-                            zIndex: -1,
-                        }}
-                    >
-                        <Knife size={150} rotation={200} />
-                    </div>
-                ))}
+                {gameState.plantedKnives.map((knife) => {
+                    const knifeRotation = 200; // TODO
+
+                    return (
+                        <div
+                            key={knife.id}
+                            className="absolute"
+                            style={{
+                                //transform: `rotate(${knife.angle}deg) translateY(-${GAME_CONFIG.TARGET_RADIUS - 5}px)`,
+                                transform: `rotate(${knife.angle}deg) translateX(-50%) translateY(20%)`,
+                                transformOrigin: '0% 0%',
+                                left: '50%',
+                                top: '50%',
+                                //marginLeft: '-9px',
+                                //marginTop: '-20px',
+                                //zIndex: -1, // commenté pour debug. ne pas supprimer
+                                border: 'solid 1px blue', // debug
+                                borderTop: 'solid 1px red', // debug
+                            }}
+                        >
+                            <Knife size={150} rotation={knifeRotation} />
+                        </div>
+                    )
+                })}
 
                 {/* Render apples */}
                 {gameState.apples.map((apple) => (
@@ -63,6 +70,7 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({
                                 top: '50%',
                                 marginLeft: '-15px',
                                 marginTop: '-15px',
+                                border: 'solid 1px yellow',
                             }}
                         >
                             <Apple size={20} />
