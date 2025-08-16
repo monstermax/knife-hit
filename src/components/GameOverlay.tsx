@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
-import {usePrivy, useCrossAppAccounts} from '@privy-io/react-auth';
+import { usePrivy, useLogin, useLogout, useWallets } from '@privy-io/react-auth';
 
 import type { GameState } from '../types/game';
-import { generateLevelConfig } from '@/utils/gameUtils';
+import MonadGamesId from '@/components/MonadGamesId';
 
 
 interface GameOverlayProps {
@@ -26,8 +26,8 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
     pauseGame,
     unpauseGame,
 }) => {
-    const {ready, authenticated} = usePrivy();
-    const {loginWithCrossAppAccount} = useCrossAppAccounts();
+    const {ready, authenticated, user, login, logout } = usePrivy();
+    const {wallets} = useWallets();
 
     useEffect(() => {
         if (gameState.gameStatus === 'levelComplete') {
@@ -36,6 +36,13 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
         }
     }, [gameState.gameStatus])
 
+    useEffect(() => {
+        console.log('user:', user)
+    }, [user])
+
+    useEffect(() => {
+        console.log('wallets:', wallets)
+    }, [wallets])
 
     if (gameState.gameStatus === 'menu') {
         return (
@@ -58,13 +65,27 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
                 <br />
                 <br />
 
-                <button
-                    className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg text-xl transition-colors"
-                    onClick={() => loginWithCrossAppAccount({appId: 'cmd8euall0037le0my79qpz42'})}
-                    disabled={!ready || !authenticated}
-                    >
-                    Log in with Monad Games ID
-                </button>
+                {!authenticated && (
+                    <button
+                        className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg text-xl transition-colors"
+                        onClick={() => login()}
+                        disabled={!ready }
+                        >
+                        Login
+                    </button>
+                )}
+
+                {authenticated && (
+                    <button
+                        className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg text-xl transition-colors"
+                        onClick={() => logout()}
+                        disabled={!ready }
+                        >
+                        Logout
+                    </button>
+                )}
+
+                <MonadGamesId />
             </div>
         );
     }
