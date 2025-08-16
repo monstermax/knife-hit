@@ -14,6 +14,9 @@ interface GameCanvasProps {
 }
 
 
+const debug = false;
+
+
 export const GameCanvas: React.FC<GameCanvasProps> = ({
     gameState,
     throwingKnives,
@@ -47,9 +50,9 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({
                                 top: '50%',
                                 //marginLeft: '-9px',
                                 //marginTop: '-20px',
-                                //zIndex: -1, // commenté pour debug. ne pas supprimer
-                                border: 'solid 1px blue', // debug
-                                borderTop: 'solid 1px red', // debug
+                                zIndex: debug ? 10 : -1,
+                                border: debug ? 'solid 1px blue': '', // debug
+                                borderTop: debug ? 'solid 1px red': '', // debug
                             }}
                         >
                             <Knife size={150} rotation={knifeRotation} />
@@ -70,7 +73,7 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({
                                 top: '50%',
                                 marginLeft: '-15px',
                                 marginTop: '-15px',
-                                border: 'solid 1px yellow',
+                                border: debug ? 'solid 1px yellow' : '',
                             }}
                         >
                             <Apple size={20} />

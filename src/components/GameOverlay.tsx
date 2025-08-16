@@ -14,6 +14,9 @@ interface GameOverlayProps {
 }
 
 
+const debug = true;
+
+
 export const GameOverlay: React.FC<GameOverlayProps> = ({
     gameState,
     onStartGame,
@@ -22,7 +25,6 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
     pauseGame,
     unpauseGame,
 }) => {
-
 
     useEffect(() => {
         if (gameState.gameStatus === 'levelComplete') {
@@ -98,7 +100,7 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
         );
     }
 
-    if (gameState.gameStatus === 'playing' || gameState.gameStatus === 'pause') {
+    if (debug && (gameState.gameStatus === 'playing' || gameState.gameStatus === 'pause')) {
         // DEBUG
 
         //const impactAngle = (180 - gameState.targetRotation) % 360;
