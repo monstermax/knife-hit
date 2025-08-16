@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import {usePrivy, useCrossAppAccounts} from '@privy-io/react-auth';
 
 import type { GameState } from '../types/game';
 import { generateLevelConfig } from '@/utils/gameUtils';
@@ -25,6 +26,8 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
     pauseGame,
     unpauseGame,
 }) => {
+    const {ready, authenticated} = usePrivy();
+    const {loginWithCrossAppAccount} = useCrossAppAccounts();
 
     useEffect(() => {
         if (gameState.gameStatus === 'levelComplete') {
@@ -43,14 +46,25 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
                     Collect apples for bonus points.
                 </p>
                 <button
-                    onClick={onStartGame}
                     className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg text-xl transition-colors"
+                    onClick={onStartGame}
                 >
                     Start Game
                 </button>
                 <div className="mt-4 text-sm text-gray-300">
                     Apples collected: {gameState.totalApples}
                 </div>
+
+                <br />
+                <br />
+
+                <button
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg text-xl transition-colors"
+                    onClick={() => loginWithCrossAppAccount({appId: 'cmd8euall0037le0my79qpz42'})}
+                    disabled={!ready || !authenticated}
+                    >
+                    Log in with Monad Games ID
+                </button>
             </div>
         );
     }
