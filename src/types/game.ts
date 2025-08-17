@@ -62,7 +62,6 @@ export interface LevelConfig {
 export interface ThrowingKnife {
     id: string;
     position: Position;
-    targetPosition: Position;
     progress: number;
     isThrown: boolean;
 }

@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
-import { usePrivy, useLogin, useLogout, useWallets } from '@privy-io/react-auth';
+import {useCrossAppAccounts} from '@privy-io/react-auth';
 
 import type { GameState } from '../types/game';
-import MonadGamesId from '@/components/MonadGamesId';
+import { privateKeyToAccount } from 'node_modules/viem/_types/accounts/privateKeyToAccount';
 
 
 interface GameOverlayProps {
@@ -17,6 +17,7 @@ interface GameOverlayProps {
 
 
 const debug = true;
+const scoreContractAddress = '0xceCBFF203C8B6044F52CE23D914A1bfD997541A4';
 
 
 export const GameOverlay: React.FC<GameOverlayProps> = ({
@@ -28,17 +29,40 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
     unpauseGame,
     onBackHome,
 }) => {
+    const { sendTransaction } = useCrossAppAccounts();
 
-    const onSubmitScore = () => {
-        console.log('submit score for user:', gameState.user)
+
+    const onSubmitScore = async () => {
+        if (!gameState.user) return;
+        console.log('submit score for user:', gameState.user);
+
+        const crossAppAccount = gameState.user.linkedAccounts.find((account) => account.type === 'cross_app');
+        const address = crossAppAccount?.embeddedWallets[0].address;
+
+        if (!address) {
+            console.warn(`no cross-app wallet found`);
+            return;
+        }
+
+        const hash = await sendTransaction(
+            {
+              to: scoreContractAddress,
+              value: 0,
+              chainId: 10143,
+            },
+            { address }
+        );
+
+        console.log('hash:', hash)
     }
 
     useEffect(() => {
         if (gameState.gameStatus === 'levelComplete') {
-            const timer = setTimeout(onNextLevel, 500);
+            const timer = setTimeout(onNextLevel, 300);
             return () => clearTimeout(timer);
         }
-    }, [gameState.gameStatus])
+    }, [gameState.gameStatus]);
+
 
     if (gameState.gameStatus === 'home') {
         return (
@@ -109,12 +133,15 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
                 <p className="text-lg mb-2">Level: {gameState.level}</p>
                 <p className="text-lg mb-2">Score: {gameState.score}</p>
                 <p className="text-lg mb-8">Total Apples: {gameState.totalApples}</p>
+
+                {/*
                 <button
                     onClick={onNextLevel}
                     className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg text-xl transition-colors"
                 >
                     Next Level
                 </button>
+                */}
             </div>
         );
     }
@@ -122,7 +149,7 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
     if (debug && (gameState.gameStatus === 'playing' || gameState.gameStatus === 'pause')) {
         // DEBUG
 
-        //const impactAngle = (180 - gameState.targetRotation) % 360;
+        const currentTargetRotation = 360 - gameState.targetRotation;
         const impactAngle = (180 + gameState.targetRotation) % 360;
 
         return (
@@ -132,9 +159,9 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
                 left: '100px',
                 backgroundColor: 'white',
             }}>
-                target angle: {Math.round(gameState.targetRotation)}
+                target angle: {Math.round(currentTargetRotation)}
                 <hr />
-                impact angle: {Math.round((180 - impactAngle) % 360)}
+                impact angle: {Math.round(impactAngle)}
                 <hr />
 
                 {gameState.gameStatus === 'playing' && (

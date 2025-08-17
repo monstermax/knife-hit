@@ -24,40 +24,38 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({
     const renderTarget = () => {
         const TargetComponent = gameState.targetType === 'lemon' ? LemonTarget : WoodTarget;
 
-        const markers = [0, 45, 90, 135, 180, 225, 270, 315].map((angle, id) => ({ id, angle }))
+        const markers = debug ? [0, 45, 90, 135, 180, 225, 270, 315].map((angle, id) => ({ id, angle })) : []
+        const lameLength = 80;
 
         return (
             <div
                 className="target-container"
                 style={{
                     transform: `translate(-50%, -100%) rotate(${gameState.targetRotation}deg)`,
+                    border: (debug) ? 'solid 1px pink' : '',
                 }}
             >
                 <TargetComponent size={GAME_CONFIG.TARGET_RADIUS * 2} />
 
                 {/* Render planted knives - only handles visible */}
                 {gameState.plantedKnives.map((knife) => {
-                    const knifeRotation = 200; // TODO
-
                     return (
                         <div
                             key={knife.id}
                             className="absolute"
                             title={`Knife #${knife.id} | angle=${knife.angle}`}
                             style={{
-                                //transform: `rotate(${knife.angle}deg) translateY(-${GAME_CONFIG.TARGET_RADIUS - 5}px)`,
-                                transform: `rotate(${knife.angle}deg) translateX(-50%) translateY(20%)`,
+                                //transform: `rotate(${knife.angle}deg) translateX(-50%) translateY(${GAME_CONFIG.TARGET_RADIUS - lameLength}px)`,
+                                transform: `rotate(${(180+knife.angle)%360}deg) translateX(-50%) translateY(${GAME_CONFIG.TARGET_RADIUS - lameLength}px)`,
                                 transformOrigin: '0% 0%',
                                 left: '50%',
                                 top: '50%',
-                                //marginLeft: '-9px',
-                                //marginTop: '-20px',
                                 zIndex: debug ? 10 : -1,
                                 border: debug ? 'solid 1px blue': '', // debug
                                 borderTop: debug ? 'solid 1px red': '', // debug
                             }}
                         >
-                            <Knife size={150} rotation={knifeRotation} />
+                            <Knife size={150} />
                         </div>
                     )
                 })}
@@ -74,8 +72,8 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({
                                 //transformOrigin: '50% 100%',
                                 left: '50%',
                                 top: '50%',
-                                transform: `rotate(${apple.angle}deg) translateX(-50%) translateY(-300%)`,
-                                transformOrigin: '0% 0%',
+                                transform: `translateX(-50%) translateY(-50%) rotate(${apple.angle}deg) translateY(-${GAME_CONFIG.TARGET_RADIUS+30}px)`,
+                                transformOrigin: '50% 50%',
                                 //left: '-10px',
                                 //top: '-10px',
                                 //marginLeft: '-15px',
@@ -93,18 +91,12 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({
                     <div
                         key={marker.id}
                         className="absolute"
-                        title={`Apple #${marker.id} | angle=${marker.angle}`}
+                        title={`Marker #${marker.id} | angle=${marker.angle}`}
                         style={{
-                            //transform: `rotate(${apple.angle}deg) translateY(-${GAME_CONFIG.TARGET_RADIUS - 20}px)`,
-                            //transformOrigin: '50% 100%',
                             left: '50%',
                             top: '50%',
                             transform: `rotate(${marker.angle}deg) translateX(-50%) translateY(-300%)`,
                             transformOrigin: '0% 0%',
-                            //left: '-10px',
-                            //top: '-10px',
-                            //marginLeft: '-15px',
-                            //marginTop: '-15px',
                             border: (debug||1) ? 'solid 1px red' : '',
                         }}
                     >

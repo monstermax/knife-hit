@@ -1,18 +1,21 @@
 import React, { FC } from 'react';
 import { PrivyProvider } from '@privy-io/react-auth';
+import { WagmiProvider } from 'wagmi';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { appId, privyConfig } from './privy_config';
 import { useGameState } from './hooks/useGameState';
 
-import { GameCanvas } from './components/GameCanvas';
-import { GameUI } from './components/GameUI';
-import { GameOverlay } from './components/GameOverlay';
-
-import './App.css';
 import { LoadingPage } from './pages/loading';
 import { HomePage } from './pages/home';
 import { GamePage } from './pages/game';
 import { GameFullState } from './types/game';
+import { wagmiConfig } from './wagmi_config';
+
+import './App.css';
+
+
+const queryClient = new QueryClient()
 
 
 export const AppWithProviders: FC = () => {

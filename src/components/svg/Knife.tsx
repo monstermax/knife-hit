@@ -4,16 +4,14 @@ import React from 'react';
 interface KnifeProps {
     size?: number;
     className?: string;
-    rotation?: number;
 }
 
 
 export const Knife: React.FC<KnifeProps> = ({
     size = 60,
-    className = '',
-    rotation = 0
+    className = ''
 }) => {
-    const width = size * 0.3;
+    const width = size * 0.4;
     const height = size;
 
     return (

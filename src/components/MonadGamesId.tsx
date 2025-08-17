@@ -15,15 +15,18 @@ export default function MonadGamesId() {
     const fetchUsername = async (walletAddress: string) => {
         setLoading(true);
         setError("");
+
         try {
             const response = await fetch(`https://monad-games-id-site.vercel.app/api/check-wallet?wallet=${walletAddress}`);
             if (response.ok) {
                 const data = await response.json();
                 setUsername(data.hasUsername ? data.user.username : "");
             }
+
         } catch (err) {
             console.error("Error fetching username:", err);
             setError("Failed to load username");
+
         } finally {
             setLoading(false);
         }
@@ -54,9 +57,11 @@ export default function MonadGamesId() {
                 const walletAddress = crossAppAccount.embeddedWallets[0].address;
                 setAccountAddress(walletAddress);
                 fetchUsername(walletAddress);
+
             } else {
                 setError("Monad Games ID account not found");
             }
+
         } else if (authenticated && user && ready) {
             setError("Please link your Monad Games ID account");
         }

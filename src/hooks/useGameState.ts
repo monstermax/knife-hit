@@ -4,6 +4,9 @@ import { GameState, ThrowingKnife, PlantedKnife, AppleItem, PrivyUser, GameFullS
 import { generateLevelConfig, generatePreKnives, generateApples, checkKnifeCollision, checkAppleCollision, calculateScore, GAME_CONFIG } from '../utils/gameUtils';
 
 
+const fps = 40;
+
+
 export const useGameState = (): GameFullState => {
 
     const [gameState, setGameState] = useState<GameState>(() => {
@@ -61,7 +64,7 @@ export const useGameState = (): GameFullState => {
                 ...prev,
                 targetRotation: (prev.targetRotation + prev.rotationSpeed * 3) % 360,
             }));
-        }, 50); // ~20fps
+        }, 1000/fps);
 
         return () => clearInterval(interval);
     }, [gameState.gameStatus, gameState.rotationSpeed]);
@@ -105,14 +108,8 @@ export const useGameState = (): GameFullState => {
 
 
     const unpauseGame = useCallback(() => {
-        const levelConfig = generateLevelConfig(1);
-        const preKnives = generatePreKnives(levelConfig.preKnives);
-        const apples = generateApples(levelConfig.appleCount, preKnives);
-
         setGameState(prev => ({
             ...prev,
-            //targetRotation: 0,
-            //rotationSpeed: levelConfig.rotationSpeed,
             gameStatus: 'playing',
         }));
     }, []);
@@ -151,13 +148,6 @@ export const useGameState = (): GameFullState => {
 
 
     const resetGame = useCallback(() => {
-        //setGameState(prev => ({
-        //    ...prev,
-        //    level: 1,
-        //    score: 0,
-        //    gameStatus: 'playing',
-        //}));
-        //setThrowingKnives([]);
         startGame(gameState.user)
     }, []);
 
@@ -169,10 +159,9 @@ export const useGameState = (): GameFullState => {
 
         const newKnife: ThrowingKnife = {
             id: `knife-${Date.now()}`,
-            position: { x: GAME_CONFIG.TARGET_CENTER_X, y: GAME_CONFIG.CANVAS_HEIGHT - 100 },
-            targetPosition: {
+            position: {
                 x: GAME_CONFIG.TARGET_CENTER_X,
-                y: GAME_CONFIG.TARGET_CENTER_Y + GAME_CONFIG.TARGET_RADIUS + 15
+                y: GAME_CONFIG.CANVAS_HEIGHT - 100,
             },
             progress: 0,
             isThrown: true,
@@ -208,15 +197,17 @@ export const useGameState = (): GameFullState => {
                 // Knife has reached target
                 // Calculate everything at the exact moment of impact
                 setGameState(prev => {
-                    const currentTargetRotation = prev.targetRotation;
+                    const currentTargetRotation = 360 - prev.targetRotation;
                     // Calculate the impact angle relative to the current target rotation
-                    const impactAngle = (360 - currentTargetRotation) % 360;
-                    //const impactAngle = (180 + currentTargetRotation) % 360;
-                    //const impactAngle = currentTargetRotation % 360;
+                    //const impactAngle = (360 - currentTargetRotation) % 360; // OK ?
+                    const impactAngle = (180 + currentTargetRotation) % 360;
+                    //const impactAngle = (360 + currentTargetRotation) % 360;
 
                     // Check collision with existing knives at impact moment
                     if (checkKnifeCollision(impactAngle, prev.plantedKnives)) {
                         const newState: GameState = { ...prev, gameStatus: 'gameOver' };
+
+                        // TODO: animation couteau qui rebondit
 
                         if (prev.score > prev.bestScore) newState.bestScore = newState.score;
                         if (prev.level > prev.bestLevel) newState.bestLevel = newState.level;
@@ -226,6 +217,13 @@ export const useGameState = (): GameFullState => {
 
                     // Check apple collision at impact moment
                     const impactHitApple = checkAppleCollision(impactAngle, prev.apples);
+
+                    if (impactHitApple) {
+                        // TODO: animation pomme qui explose en 2
+
+                    } else {
+                        // TODO: animation particules
+                    }
 
                     const newPlantedKnife: PlantedKnife = {
                         id: newKnife.id,
@@ -250,6 +248,9 @@ export const useGameState = (): GameFullState => {
 
                     // Check if level is complete
                     if (newState.knivesRemaining <= 0) {
+
+                        // TODO animation cible qui explose
+
                         return { ...newState, gameStatus: 'levelComplete' };
                     }
 
