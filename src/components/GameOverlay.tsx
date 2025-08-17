@@ -19,6 +19,10 @@ interface GameOverlayProps {
 const debug = true;
 const scoreContractAddress = '0xceCBFF203C8B6044F52CE23D914A1bfD997541A4';
 
+const scoreContractAbi = [
+    "function updatePlayerData(address player, uint256 scoreAmount, uint256 transactionAmount) public",
+];
+
 
 export const GameOverlay: React.FC<GameOverlayProps> = ({
     gameState,
@@ -44,11 +48,17 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
             return;
         }
 
+        const method = "updatePlayerData";
+        const transactionAmount = 1; // TODO???
+        const args = [gameState.bestScore, transactionAmount];
+        const data = ""; // TODO
+
         const hash = await sendTransaction(
             {
               to: scoreContractAddress,
               value: 0,
               chainId: 10143,
+              data,
             },
             { address }
         );
