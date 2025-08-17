@@ -1,3 +1,8 @@
+import type { usePrivy } from '@privy-io/react-auth';
+
+
+export type PrivyUser = ReturnType<typeof usePrivy>['user'];
+
 
 export interface Position {
     x: number;
@@ -16,7 +21,20 @@ export interface AppleItem {
     collected: boolean;
 }
 
+export type GameFullState = {
+    gameState: GameState;
+    throwingKnives: ThrowingKnife[];
+    startGame: (user?: PrivyUser | null) => void;
+    nextLevel: () => void;
+    throwKnife: () => void;
+    resetGame: () => void;
+    pauseGame: () => void;
+    unpauseGame: () => void;
+    quitGame: () => void;
+}
+
 export interface GameState {
+    user: PrivyUser | null,
     level: number;
     score: number;
     totalApples: number;
@@ -25,9 +43,11 @@ export interface GameState {
     apples: AppleItem[];
     targetRotation: number;
     rotationSpeed: number;
-    gameStatus: 'loading' | 'home' | 'playing' | 'gameOver' | 'levelComplete' | 'menu' | 'pause';
+    gameStatus: 'loading' | 'home' | 'playing' | 'gameOver' | 'levelComplete' | 'pause';
     targetType: 'wood' | 'lemon';
     isBossLevel: boolean;
+    bestScore: number,
+    bestLevel: number,
 }
 
 export interface LevelConfig {

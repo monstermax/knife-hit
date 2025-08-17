@@ -1,18 +1,24 @@
 import { useState, useCallback, useEffect } from 'react';
 
-import { GameState, ThrowingKnife, PlantedKnife, AppleItem } from '../types/game';
+import { GameState, ThrowingKnife, PlantedKnife, AppleItem, PrivyUser, GameFullState } from '../types/game';
 import { generateLevelConfig, generatePreKnives, generateApples, checkKnifeCollision, checkAppleCollision, calculateScore, GAME_CONFIG } from '../utils/gameUtils';
 
 
-const STORAGE_KEY = 'knife-hit-apples';
+export const useGameState = (): GameFullState => {
 
-
-export const useGameState = () => {
     const [gameState, setGameState] = useState<GameState>(() => {
-        const savedApples = localStorage.getItem(STORAGE_KEY);
+        // Initialise gameState
+        const savedApples = localStorage.getItem('knife-hit-apples');
         const totalApples = savedApples ? parseInt(savedApples, 10) : 0;
 
+        const savedBestScore = localStorage.getItem('knife-hit-bestscore');
+        const bestScore = savedBestScore ? parseInt(savedBestScore, 10) : 0;
+
+        const savedBestLevel = localStorage.getItem('knife-hit-bestlevel');
+        const bestLevel = savedBestLevel ? parseInt(savedBestLevel, 10) : 0;
+
         return {
+            user: null,
             level: 1,
             score: 0,
             totalApples,
@@ -24,15 +30,27 @@ export const useGameState = () => {
             gameStatus: 'loading',
             targetType: 'wood',
             isBossLevel: false,
+            bestScore,
+            bestLevel,
         };
     });
 
     const [throwingKnives, setThrowingKnives] = useState<ThrowingKnife[]>([]);
 
-    // Save apples to localStorage whenever totalApples changes
+
+    // Save apples/bestscore/bestlevel to localStorage whenever it changes
     useEffect(() => {
-        localStorage.setItem(STORAGE_KEY, gameState.totalApples.toString());
+        localStorage.setItem('knife-hit-apples', gameState.totalApples.toString());
     }, [gameState.totalApples]);
+
+    useEffect(() => {
+        localStorage.setItem('knife-hit-bestscore', gameState.bestScore.toString());
+    }, [gameState.bestScore]);
+
+    useEffect(() => {
+        localStorage.setItem('knife-hit-bestlevel', gameState.bestLevel.toString());
+    }, [gameState.bestLevel]);
+
 
     // Target rotation animation
     useEffect(() => {
@@ -41,14 +59,16 @@ export const useGameState = () => {
         const interval = setInterval(() => {
             setGameState(prev => ({
                 ...prev,
-                targetRotation: (prev.targetRotation + prev.rotationSpeed) % 360,
+                targetRotation: (prev.targetRotation + prev.rotationSpeed * 3) % 360,
             }));
-        }, 16); // ~60fps
+        }, 50); // ~20fps
 
         return () => clearInterval(interval);
     }, [gameState.gameStatus, gameState.rotationSpeed]);
 
-    const startGame = useCallback(() => {
+
+    const startGame = useCallback((user?: PrivyUser | null) => {
+        user = user ?? null;
         const levelConfig = generateLevelConfig(1);
         const preKnives = generatePreKnives(levelConfig.preKnives);
         const apples = generateApples(levelConfig.appleCount, preKnives);
@@ -65,8 +85,10 @@ export const useGameState = () => {
             gameStatus: 'playing',
             targetType: levelConfig.targetType,
             isBossLevel: levelConfig.isBoss,
+            user,
         }));
     }, []);
+
 
     const pauseGame = useCallback(() => {
         const levelConfig = generateLevelConfig(1);
@@ -81,6 +103,7 @@ export const useGameState = () => {
         }));
     }, []);
 
+
     const unpauseGame = useCallback(() => {
         const levelConfig = generateLevelConfig(1);
         const preKnives = generatePreKnives(levelConfig.preKnives);
@@ -93,6 +116,7 @@ export const useGameState = () => {
             gameStatus: 'playing',
         }));
     }, []);
+
 
     const nextLevel = useCallback(() => {
         const nextLevelNum = gameState.level + 1;
@@ -113,6 +137,30 @@ export const useGameState = () => {
             isBossLevel: levelConfig.isBoss,
         }));
     }, [gameState.level]);
+
+
+    const quitGame = useCallback(() => {
+        setGameState(prev => ({
+            ...prev,
+            level: 0,
+            score: 0,
+            gameStatus: 'home',
+        }));
+        setThrowingKnives([]);
+    }, []);
+
+
+    const resetGame = useCallback(() => {
+        //setGameState(prev => ({
+        //    ...prev,
+        //    level: 1,
+        //    score: 0,
+        //    gameStatus: 'playing',
+        //}));
+        //setThrowingKnives([]);
+        startGame(gameState.user)
+    }, []);
+
 
     const throwKnife = useCallback(() => {
         if (gameState.knivesRemaining <= 0 || gameState.gameStatus !== 'playing') {
@@ -168,7 +216,12 @@ export const useGameState = () => {
 
                     // Check collision with existing knives at impact moment
                     if (checkKnifeCollision(impactAngle, prev.plantedKnives)) {
-                        return { ...prev, gameStatus: 'gameOver' };
+                        const newState: GameState = { ...prev, gameStatus: 'gameOver' };
+
+                        if (prev.score > prev.bestScore) newState.bestScore = newState.score;
+                        if (prev.level > prev.bestLevel) newState.bestLevel = newState.level;
+
+                        return newState;
                     }
 
                     // Check apple collision at impact moment
@@ -179,7 +232,7 @@ export const useGameState = () => {
                         angle: impactAngle,
                     };
 
-                    const newState = {
+                    const newState: GameState = {
                         ...prev,
                         plantedKnives: [...prev.plantedKnives, newPlantedKnife],
                         score: prev.score + calculateScore(prev.level, impactHitApple ? 1 : 0),
@@ -213,15 +266,6 @@ export const useGameState = () => {
         requestAnimationFrame(animate);
     }, [gameState.knivesRemaining, gameState.gameStatus, gameState.targetRotation, gameState.plantedKnives, gameState.apples]);
 
-    const resetGame = useCallback(() => {
-        setGameState(prev => ({
-            ...prev,
-            level: 1,
-            score: 0,
-            gameStatus: 'menu',
-        }));
-        setThrowingKnives([]);
-    }, []);
 
     return {
         gameState,
@@ -232,6 +276,7 @@ export const useGameState = () => {
         resetGame,
         pauseGame,
         unpauseGame,
+        quitGame,
     };
 };
 

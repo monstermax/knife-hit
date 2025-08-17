@@ -12,10 +12,11 @@ interface GameOverlayProps {
     onResetGame: () => void;
     pauseGame: () => void;
     unpauseGame: () => void;
+    onBackHome: () => void;
 }
 
 
-const debug = false;
+const debug = true;
 
 
 export const GameOverlay: React.FC<GameOverlayProps> = ({
@@ -25,7 +26,12 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
     onResetGame,
     pauseGame,
     unpauseGame,
+    onBackHome,
 }) => {
+
+    const onSubmitScore = () => {
+        console.log('submit score for user:', gameState.user)
+    }
 
     useEffect(() => {
         if (gameState.gameStatus === 'levelComplete') {
@@ -34,7 +40,7 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
         }
     }, [gameState.gameStatus])
 
-    if (gameState.gameStatus === 'menu') {
+    if (gameState.gameStatus === 'home') {
         return (
             <div className="game-over-overlay">
                 <h1 className="text-4xl font-bold mb-8 text-white">Knife Hit</h1>
@@ -62,15 +68,28 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
                 <p className="text-lg mb-2">Level: {gameState.level}</p>
                 <p className="text-lg mb-2">Score: {gameState.score}</p>
                 <p className="text-lg mb-8">Total Apples: {gameState.totalApples}</p>
+                <p className="text-lg mb-2">BestLevel: {gameState.bestLevel}</p>
+                <p className="text-lg mb-2">BestScore: {gameState.bestScore}</p>
                 <div className="flex gap-4">
+
+                    {gameState.user && (
+                        <button
+                            onClick={onSubmitScore}
+                            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition-colors"
+                        >
+                            Submit score
+                        </button>
+                    )}
+
                     <button
                         onClick={onResetGame}
                         className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition-colors"
                     >
                         Try Again
                     </button>
+
                     <button
-                        onClick={onResetGame}
+                        onClick={onBackHome}
                         className="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded-lg transition-colors"
                     >
                         Main Menu

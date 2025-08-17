@@ -2,7 +2,6 @@ import React from 'react';
 
 import { WoodTarget, LemonTarget, Knife, Apple } from './svg';
 import { GAME_CONFIG } from '../utils/gameUtils';
-import { KnifeHandle } from './svg/KnifeHandle';
 
 import type { GameState, ThrowingKnife } from '../types/game';
 
@@ -14,7 +13,7 @@ interface GameCanvasProps {
 }
 
 
-const debug = false;
+const debug = true;
 
 
 export const GameCanvas: React.FC<GameCanvasProps> = ({
@@ -67,16 +66,20 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({
                             key={apple.id}
                             className="absolute"
                             style={{
-                                transform: `rotate(${apple.angle}deg) translateY(-${GAME_CONFIG.TARGET_RADIUS - 20}px)`,
-                                transformOrigin: '50% 100%',
+                                //transform: `rotate(${apple.angle}deg) translateY(-${GAME_CONFIG.TARGET_RADIUS - 20}px)`,
+                                //transformOrigin: '50% 100%',
                                 left: '50%',
                                 top: '50%',
-                                marginLeft: '-15px',
-                                marginTop: '-15px',
-                                border: debug ? 'solid 1px yellow' : '',
+                                transform: `rotate(${apple.angle}deg) translateX(-50%) translateY(-300%)`,
+                                transformOrigin: '0% 0%',
+                                //left: '-10px',
+                                //top: '-10px',
+                                //marginLeft: '-15px',
+                                //marginTop: '-15px',
+                                border: (debug) ? 'solid 1px yellow' : '',
                             }}
                         >
-                            <Apple size={20} />
+                            <Apple size={50} />
                         </div>
                     )
                 ))}
