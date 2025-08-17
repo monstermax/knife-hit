@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { usePrivy, useWallets, useConnectWallet, type CrossAppAccountWithMetadata } from "@privy-io/react-auth";
 
+
 export default function MonadGamesId() {
     const { authenticated, user, ready, logout } = usePrivy();
     const { wallets } = useWallets();
     const { connectWallet } = useConnectWallet();
-    
+
     const [accountAddress, setAccountAddress] = useState<string>("");
     const [username, setUsername] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
@@ -28,31 +29,11 @@ export default function MonadGamesId() {
         }
     };
 
-    const getWalletAddress = () => {
-        // Chercher d'abord un cross-app account Monad Games ID
-        if (user && user.linkedAccounts && user.linkedAccounts.length > 0) {
-            const crossAppAccount = user.linkedAccounts.find(
-                account => account.type === "cross_app" && account.providerApp.id === "cm2o1e6iq0c6fl50dnkfhwcxb"
-            ) as CrossAppAccountWithMetadata;
-
-            if (crossAppAccount?.embeddedWallets && crossAppAccount.embeddedWallets.length > 0) {
-                return crossAppAccount.embeddedWallets[0].address;
-            }
-        }
-
-        // Utiliser le wallet intégré de l'utilisateur (priorité principale)
-        const embeddedWallet = wallets.find(wallet => wallet.walletClientType === "privy");
-        if (embeddedWallet) {
-            return embeddedWallet.address;
-        }
-
-        return null;
-    };
-
     const handleCreateWallet = async () => {
         try {
             // Utiliser connectWallet sans paramètres pour créer un wallet intégré
             await connectWallet();
+
         } catch (err) {
             console.error("Error creating wallet:", err);
             setError("Failed to create wallet");
@@ -64,17 +45,22 @@ export default function MonadGamesId() {
         setUsername("");
         setError("");
 
-        if (authenticated && user && ready) {
-            const walletAddress = getWalletAddress();
-            
-            if (walletAddress) {
+        if (authenticated && user && ready && user.linkedAccounts.length > 0) {
+            const crossAppAccount = user.linkedAccounts.find(
+                account => account.type === "cross_app" && account.providerApp.id === "cmd8euall0037le0my79qpz42"
+            ) as CrossAppAccountWithMetadata;
+
+            if (crossAppAccount?.embeddedWallets.length > 0) {
+                const walletAddress = crossAppAccount.embeddedWallets[0].address;
                 setAccountAddress(walletAddress);
                 fetchUsername(walletAddress);
             } else {
-                setError("No wallet found. Please create or connect a wallet.");
+                setError("Monad Games ID account not found");
             }
+        } else if (authenticated && user && ready) {
+            setError("Please link your Monad Games ID account");
         }
-    }, [authenticated, user, ready, wallets]);
+    }, [authenticated, user, ready]);
 
     if (!ready) {
         return (

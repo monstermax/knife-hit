@@ -21,7 +21,7 @@ export const useGameState = () => {
             apples: [],
             targetRotation: 0,
             rotationSpeed: 0,
-            gameStatus: 'home',
+            gameStatus: 'loading',
             targetType: 'wood',
             isBossLevel: false,
         };
