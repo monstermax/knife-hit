@@ -25,7 +25,7 @@ export interface GameState {
     apples: AppleItem[];
     targetRotation: number;
     rotationSpeed: number;
-    gameStatus: 'playing' | 'gameOver' | 'levelComplete' | 'menu' | 'pause';
+    gameStatus: 'home' | 'playing' | 'gameOver' | 'levelComplete' | 'menu' | 'pause';
     targetType: 'wood' | 'lemon';
     isBossLevel: boolean;
 }

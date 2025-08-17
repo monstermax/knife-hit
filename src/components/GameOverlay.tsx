@@ -15,7 +15,7 @@ interface GameOverlayProps {
 }
 
 
-const debug = true;
+const debug = false;
 
 
 export const GameOverlay: React.FC<GameOverlayProps> = ({
@@ -26,8 +26,6 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
     pauseGame,
     unpauseGame,
 }) => {
-    const {ready, authenticated, user, login, logout } = usePrivy();
-    const {wallets} = useWallets();
 
     useEffect(() => {
         if (gameState.gameStatus === 'levelComplete') {
@@ -35,14 +33,6 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
             return () => clearTimeout(timer);
         }
     }, [gameState.gameStatus])
-
-    useEffect(() => {
-        console.log('user:', user)
-    }, [user])
-
-    useEffect(() => {
-        console.log('wallets:', wallets)
-    }, [wallets])
 
     if (gameState.gameStatus === 'menu') {
         return (
@@ -61,31 +51,6 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
                 <div className="mt-4 text-sm text-gray-300">
                     Apples collected: {gameState.totalApples}
                 </div>
-
-                <br />
-                <br />
-
-                {!authenticated && (
-                    <button
-                        className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg text-xl transition-colors"
-                        onClick={() => login()}
-                        disabled={!ready }
-                        >
-                        Login
-                    </button>
-                )}
-
-                {authenticated && (
-                    <button
-                        className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg text-xl transition-colors"
-                        onClick={() => logout()}
-                        disabled={!ready }
-                        >
-                        Logout
-                    </button>
-                )}
-
-                <MonadGamesId />
             </div>
         );
     }

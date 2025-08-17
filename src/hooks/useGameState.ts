@@ -20,8 +20,8 @@ export const useGameState = () => {
             plantedKnives: [],
             apples: [],
             targetRotation: 0,
-            rotationSpeed: 0.5,
-            gameStatus: 'menu',
+            rotationSpeed: 0,
+            gameStatus: 'home',
             targetType: 'wood',
             isBossLevel: false,
         };
