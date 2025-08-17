@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react';
 import {useCrossAppAccounts} from '@privy-io/react-auth';
+import { encodeFunctionData } from 'viem';
+
+import scoreContractAbi from '../utils/score_contract_abi.json';
 
 import type { GameState } from '../types/game';
-import { privateKeyToAccount } from 'node_modules/viem/_types/accounts/privateKeyToAccount';
 
 
 interface GameOverlayProps {
@@ -18,10 +20,6 @@ interface GameOverlayProps {
 
 const debug = true;
 const scoreContractAddress = '0xceCBFF203C8B6044F52CE23D914A1bfD997541A4';
-
-const scoreContractAbi = [
-    "function updatePlayerData(address player, uint256 scoreAmount, uint256 transactionAmount) public",
-];
 
 
 export const GameOverlay: React.FC<GameOverlayProps> = ({
@@ -48,22 +46,49 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
             return;
         }
 
-        const method = "updatePlayerData";
-        const transactionAmount = 1; // TODO???
-        const args = [gameState.bestScore, transactionAmount];
-        const data = ""; // TODO
+        try {
+            // Encoder les données pour l'appel au smart contract
+            const transactionAmount = 1; // TODO
 
-        const hash = await sendTransaction(
-            {
-              to: scoreContractAddress,
-              value: 0,
-              chainId: 10143,
-              data,
-            },
-            { address }
-        );
+            const data = encodeFunctionData({
+                abi: scoreContractAbi,
+                functionName: 'updatePlayerData',
+                args: [
+                    address, // player address
+                    BigInt(gameState.bestScore), // scoreAmount
+                    BigInt(transactionAmount) // transactionAmount
+                ]
+            });
 
-        console.log('hash:', hash)
+            console.log('Calling smart contract with:', {
+                player: address,
+                scoreAmount: gameState.bestScore,
+                transactionAmount: transactionAmount,
+                encodedData: data
+            });
+
+            const hash = await sendTransaction(
+                {
+                    to: scoreContractAddress,
+                    value: 0, // Pas de MON envoyé avec la transaction
+                    chainId: 10143, // Monad testnet
+                    data,
+                },
+                { address }
+            );
+
+            console.log('Transaction hash:', hash);
+            console.log('Score submitted successfully!');
+
+            // Optionnel : afficher un message de succès à l'utilisateur
+            alert(`Score submitted successfully! Transaction: ${hash}`);
+
+        } catch (error) {
+            console.error('Error submitting score:', error);
+            // Optionnel : afficher l'erreur à l'utilisateur
+            const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+            alert(`Failed to submit score: ${errorMessage}`);
+        }
     }
 
     useEffect(() => {
