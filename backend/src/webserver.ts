@@ -3,20 +3,20 @@
 import fs from 'fs';
 import express, { Request, Response } from 'express';
 import cors from 'cors';
-import { createProxyMiddleware } from 'http-proxy-middleware';
-import { createWalletClient, createPublicClient, http, custom, defineChain } from 'viem';
+import dotenv from 'dotenv';
+import { createWalletClient, createPublicClient, http } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 
 import { monadTestnet } from './config/network';
 
 import LEADERBOARD_ABI from './contract/leaderboard.json';
 
+dotenv.config({ path: `${__dirname}/../.env` });
+
 
 // Configuration initiale
 const PORT = 5686;
 const CONTRACT_ADDRESS = '0xceCBFF203C8B6044F52CE23D914A1bfD997541A4'; // Leaderboard => https://testnet.monadexplorer.com/address/0xceCBFF203C8B6044F52CE23D914A1bfD997541A4?tab=Contract
-
-//const gameBotAddress = '0xCCF8BA457dCad7eE6A0361c96846a0f79744b113';
 
 
 // Fonction pour obtenir la clé privée
@@ -36,7 +36,13 @@ function getPrivateKey(): `0x${string}` {
 
 
 async function main() {
-    const privateKey = getPrivateKey();
+    const privateKey = (process.env.PRIVATE_KEY || getPrivateKey()) as `0x${string}`;
+
+    if (! privateKey) {
+        console.log(`Error: private key not found`);
+        return;
+    }
+
     const account = privateKeyToAccount(privateKey);
 
     // Clients blockchain
