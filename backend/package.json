@@ -1,7 +1,7 @@
 {
   "scripts": {
-    "start": "ts-node src/webserver.ts",
-    "dev": "ts-node src/webserver.ts --dev"
+    "start": "ts-node src/webserver.ts --prod",
+    "dev": "ts-node src/webserver.ts"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
@@ -12,6 +12,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^5.1.0",
+    "http-proxy-middleware": "^3.0.5",
     "openzeppelin": "^1.0.0",
     "viem": "^2.34.0"
   }

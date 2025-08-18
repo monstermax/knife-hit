@@ -3,6 +3,7 @@
 import fs from 'fs';
 import express, { Request, Response } from 'express';
 import cors from 'cors';
+import { createProxyMiddleware } from 'http-proxy-middleware';
 import { createWalletClient, createPublicClient, http, custom, defineChain } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
 
@@ -56,15 +57,8 @@ async function main() {
     app.use(cors());
     app.use(express.json());
 
-    if (process.argv.includes('--dev')) {
-        // dev
-        //app.use( /* TODO: proxy to http://localhost:5685 */ );
 
-    } else {
-        // prod
-        app.use(express.static(`${__dirname}/../../frontend/dist/`))
-    }
-
+    // API ROUTES
 
     // Route GET /api/playerDataPerGame
     app.get('/api/playerDataPerGame', async (req: Request, res: Response) => {
@@ -83,7 +77,7 @@ async function main() {
                 args: [game, player],
             }) as [bigint, bigint]; // [score, transactions]
 
-            console.log('result:', data)
+            //console.log('result:', data)
 
             res.json({
                 success: true,
@@ -177,7 +171,7 @@ async function main() {
             const hash = await walletClient.writeContract(request);
             const receipt = await publicClient.waitForTransactionReceipt({ hash });
 
-            console.log('registerGame receipt:', receipt)
+            //console.log('registerGame receipt:', receipt)
 
             res.json({
                 success: true,
@@ -212,7 +206,7 @@ async function main() {
             const hash = await walletClient.writeContract(request);
             const receipt = await publicClient.waitForTransactionReceipt({ hash });
 
-            console.log('updatePlayerData receipt:', receipt)
+            //console.log('updatePlayerData receipt:', receipt)
 
             res.json({
                 success: true,
@@ -260,6 +254,23 @@ async function main() {
             res.status(500).json({ error: 'Internal server error' });
         }
     });
+
+
+    // STATIC ROUTES
+
+    if (process.argv.includes('--prod')) {
+        // prod
+        app.use(express.static(`${__dirname}/../../frontend/dist/`))
+
+    } else {
+        // dev - redirection (TODO: proxy ou embeded server) vers le serveur de développement frontend
+        //console.log('Mode développement activé - proxy vers http://localhost:5685');
+
+        app.use('/', async (req: Request, res: Response) => {
+            let html = `<html><script>window.location.href = 'http://localhost:5685/'</script></html>`;
+            res.send(html);
+        });
+    }
 
 
     // Démarrage du serveur

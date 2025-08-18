@@ -3,7 +3,7 @@
 const apiEndpoint = "";
 
 
-export const registerGame = () => {
+export const registerGame = (): Promise<any> => {
     // Register game
     const apiUrl = `${apiEndpoint}/api/registerGame`;
 
@@ -31,7 +31,7 @@ export const registerGame = () => {
 }
 
 
-export const getGame = () => {
+export const getGame = (): Promise<any> => {
     // Fetch game infos
     const apiUrl = `${apiEndpoint}/api/games`;
 
@@ -50,7 +50,7 @@ export const getGame = () => {
 }
 
 
-export const getPlayerDataPerGame = (playerAddress: string) => {
+export const getPlayerDataPerGame = (playerAddress: string): Promise<any | null> => {
     // Fetch player data (score+transactions) for our game
     if (!playerAddress) return Promise.resolve(null);
 
@@ -73,9 +73,9 @@ export const getPlayerDataPerGame = (playerAddress: string) => {
 }
 
 
-export const updatePlayerData = (playerAddress: string, score: number) => {
+export const updatePlayerData = (playerAddress: string, score: number): Promise<any | null> => {
     // Update player data
-    if (!playerAddress) return;
+    if (!playerAddress) return Promise.resolve(null);
 
     const apiUrl = `${apiEndpoint}/api/updatePlayerData`;
 
