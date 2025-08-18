@@ -8,6 +8,7 @@ import type { GameState } from '../types/game';
 
 interface GameOverlayProps {
     gameState: GameState;
+    accountAddress: string | null;
     onStartGame: () => void;
     onNextLevel: () => void;
     onResetGame: () => void;
@@ -22,6 +23,7 @@ const debug = true;
 
 export const GameOverlay: React.FC<GameOverlayProps> = ({
     gameState,
+    accountAddress,
     onStartGame,
     onNextLevel,
     onResetGame,
@@ -39,10 +41,10 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
 
         if (gameState.gameStatus === 'gameOver') {
             // submit score
-            const playerAddress = getUserAddress(gameState.user);
+            console.log('gameover. playerAddress =', gameState.playerAddress)
 
-            if (playerAddress) {
-                updatePlayerData(playerAddress, gameState.score);
+            if (gameState.playerAddress) {
+                updatePlayerData(gameState.playerAddress, gameState.score);
             }
         }
     }, [gameState.gameStatus]);

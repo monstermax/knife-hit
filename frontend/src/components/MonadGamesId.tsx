@@ -1,6 +1,6 @@
 
 import { FC } from 'react';
-import { usePrivy } from "@privy-io/react-auth";
+
 import { GameFullState } from '@/types/game';
 
 

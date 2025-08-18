@@ -50,14 +50,14 @@ export const getGame = (): Promise<any> => {
 }
 
 
-export const getPlayerDataPerGame = (playerAddress: string): Promise<any | null> => {
+export const getPlayerDataPerGame = (accountAddress: string): Promise<any | null> => {
     // Fetch player data (score+transactions) for our game
-    if (!playerAddress) return Promise.resolve(null);
+    if (!accountAddress) return Promise.resolve(null);
 
     const apiUrl = `${apiEndpoint}/api/playerDataPerGame`;
 
     const data = {
-        player: playerAddress ?? '',
+        player: accountAddress ?? '',
     };
 
     const querystring = (new URLSearchParams(data)).toString();
@@ -73,14 +73,14 @@ export const getPlayerDataPerGame = (playerAddress: string): Promise<any | null>
 }
 
 
-export const updatePlayerData = (playerAddress: string, score: number): Promise<any | null> => {
+export const updatePlayerData = (accountAddress: string, score: number): Promise<any | null> => {
     // Update player data
-    if (!playerAddress) return Promise.resolve(null);
+    if (!accountAddress) return Promise.resolve(null);
 
     const apiUrl = `${apiEndpoint}/api/updatePlayerData`;
 
     const data = {
-        player: playerAddress,
+        player: accountAddress,
         scoreAmount: score,
         transactionAmount: 1,
     };

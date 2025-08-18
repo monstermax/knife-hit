@@ -26,29 +26,29 @@ export type GameFullState = {
     user: User | null;
     gameState: GameState;
     throwingKnives: ThrowingKnife[];
-    accountAddress: string,
-    username: string,
+    accountAddress: string | null,
+    username: string | null,
     ready: boolean,
     loading: boolean,
-    error: string,
+    error: string | null,
     login: (options?: LoginModalOptions | React.MouseEvent<any, any>) => void;
     logout: () => Promise<void>;
-    startGame: (user?: PrivyUser | null) => void;
+    startGame: (playerAddress?: string | null) => void;
     nextLevel: () => void;
     throwKnife: () => void;
     resetGame: () => void;
     pauseGame: () => void;
     unpauseGame: () => void;
     quitGame: () => void;
-    setAccountAddress: React.Dispatch<React.SetStateAction<string>>,
-    setUsername: React.Dispatch<React.SetStateAction<string>>,
+    setAccountAddress: React.Dispatch<React.SetStateAction<string | null>>,
+    setUsername: React.Dispatch<React.SetStateAction<string | null>>,
     setLoading: React.Dispatch<React.SetStateAction<boolean>>,
-    setError: React.Dispatch<React.SetStateAction<string>>,
+    setError: React.Dispatch<React.SetStateAction<string | null>>,
     handleCreateWallet: () => Promise<void>,
 }
 
 export interface GameState {
-    user: PrivyUser | null,
+    playerAddress: string | null,
     level: number;
     score: number;
     totalApples: number;

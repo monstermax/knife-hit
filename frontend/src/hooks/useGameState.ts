@@ -1,7 +1,7 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 
 import { GameState, ThrowingKnife, PlantedKnife, AppleItem, PrivyUser, GameFullState } from '../types/game';
-import { generateLevelConfig, generatePreKnives, generateApples, checkKnifeCollision, checkAppleCollision, calculateScore, GAME_CONFIG } from '../utils/gameUtils';
+import { generateLevelConfig, generatePreKnives, generateApples, checkKnifeCollision, checkAppleCollision, calculateScore, GAME_CONFIG, getUserAddress } from '../utils/gameUtils';
 import { CrossAppAccountWithMetadata, useConnectWallet, usePrivy } from '@privy-io/react-auth';
 
 
@@ -22,7 +22,7 @@ export const useGameState = (): GameFullState => {
         const bestLevel = savedBestLevel ? parseInt(savedBestLevel, 10) : 0;
 
         return {
-            user: null,
+            playerAddress: null,
             level: 1,
             score: 0,
             totalApples,
@@ -44,11 +44,12 @@ export const useGameState = (): GameFullState => {
 
     const [throwingKnives, setThrowingKnives] = useState<ThrowingKnife[]>([]);
 
-    const [accountAddress, setAccountAddress] = useState<string>("");
-    const [username, setUsername] = useState<string>("");
+    const [accountAddress, setAccountAddress] = useState<string | null>(null);
+    const [username, setUsername] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
-    const [error, setError] = useState<string>("");
+    const [error, setError] = useState<string | null>(null);
 
+    //const accountAddress = useMemo(() => getUserAddress(user), [user]);
 
     // Save apples/bestscore/bestlevel to localStorage whenever it changes
     useEffect(() => {
@@ -80,9 +81,9 @@ export const useGameState = (): GameFullState => {
 
 
     useEffect(() => {
-        setAccountAddress("");
-        setUsername("");
-        setError("");
+        setAccountAddress(null);
+        setUsername(null);
+        setError(null);
 
         if (authenticated && user && ready && user.linkedAccounts.length > 0) {
             const crossAppAccount = user.linkedAccounts.find(
@@ -137,11 +138,14 @@ export const useGameState = (): GameFullState => {
     };
 
 
-    const startGame = useCallback((user?: PrivyUser | null) => {
-        user = user ?? null;
+    const startGame = (playerAddress?: string | null) => {
+        playerAddress = playerAddress ?? null;
         const levelConfig = generateLevelConfig(1);
         const preKnives = generatePreKnives(levelConfig.preKnives);
         const apples = generateApples(levelConfig.appleCount, preKnives);
+
+        console.log('startGame with user', user)
+        console.log('startGame with playerAddress', playerAddress)
 
         setGameState(prev => ({
             ...prev,
@@ -155,9 +159,9 @@ export const useGameState = (): GameFullState => {
             gameStatus: 'playing',
             targetType: levelConfig.targetType,
             isBossLevel: levelConfig.isBoss,
-            user,
+            playerAddress,
         }));
-    }, []);
+    };
 
 
     const pauseGame = useCallback(() => {
@@ -203,14 +207,16 @@ export const useGameState = (): GameFullState => {
             level: 0,
             score: 0,
             gameStatus: 'home',
+            playerAddress: null,
         }));
         setThrowingKnives([]);
     }, []);
 
 
-    const resetGame = useCallback(() => {
-        startGame(gameState.user)
-    }, []);
+    const resetGame = () => {
+        console.log('resetGame with accountAddress', gameState.playerAddress)
+        startGame(gameState.playerAddress)
+    };
 
 
     const throwKnife = useCallback(() => {

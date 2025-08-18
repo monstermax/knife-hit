@@ -13,10 +13,7 @@ const debug = false;
 
 
 export const HomePage: FC<{ gameFullState: GameFullState }> = ({ gameFullState }) => {
-    const { ready, authenticated, user, accountAddress, error, loading, username, login, startGame, handleCreateWallet } = gameFullState;
-
-
-    const playerAddress = useMemo(() => getUserAddress(user), [user]);
+    const { ready, authenticated, accountAddress, login, startGame } = gameFullState;
 
     const playAsGuest = () => {
         startGame();
@@ -24,14 +21,12 @@ export const HomePage: FC<{ gameFullState: GameFullState }> = ({ gameFullState }
 
     const connectAndPlay = () => {
         if (authenticated) {
-            startGame(user);
+            startGame(accountAddress);
 
         } else {
             login();
         }
     };
-
-
 
 
     return (
@@ -93,8 +88,8 @@ export const HomePage: FC<{ gameFullState: GameFullState }> = ({ gameFullState }
                         <hr />
                         <Button onClick={() => getGame().then(console.log)}>getGame</Button>
                         <Button onClick={() => registerGame()}>registerGame</Button>
-                        <Button onClick={() => getPlayerDataPerGame(playerAddress ?? '').then(console.log)}>getPlayerDataPerGame</Button>
-                        <Button onClick={() => updatePlayerData(playerAddress ?? '', 10)}>updatePlayerData</Button>
+                        <Button onClick={() => getPlayerDataPerGame(accountAddress ?? '').then(console.log)}>getPlayerDataPerGame</Button>
+                        <Button onClick={() => updatePlayerData(accountAddress ?? '', 10)}>updatePlayerData</Button>
                     </>
                 )}
 
