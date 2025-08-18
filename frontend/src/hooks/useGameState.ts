@@ -161,6 +161,8 @@ export const useGameState = (): GameFullState => {
             isBossLevel: levelConfig.isBoss,
             playerAddress,
         }));
+
+        setThrowingKnives([]);
     };
 
 
@@ -277,7 +279,7 @@ export const useGameState = (): GameFullState => {
 
                         setTimeout(() => {
                             setGameState(prev => ({ ...prev, gameStatus: 'gameOver' }))
-                        }, 1000)
+                        }, 500)
 
                         // TODO: animation couteau qui rebondit
 
@@ -296,6 +298,9 @@ export const useGameState = (): GameFullState => {
                     } else {
                         // TODO: animation particules
                     }
+
+                    setThrowingKnives(prev => prev.filter(knife => knife.id !== newKnife.id));
+
 
                     const newPlantedKnife: PlantedKnife = {
                         id: newKnife.id,
@@ -334,7 +339,7 @@ export const useGameState = (): GameFullState => {
                 });
 
                 // Remove knife from throwing knives
-                setThrowingKnives(prev => prev.filter(knife => knife.id !== newKnife.id));
+                //setThrowingKnives(prev => prev.filter(knife => knife.id !== newKnife.id));
 
                 //pauseGame(); // DEBUG
             }

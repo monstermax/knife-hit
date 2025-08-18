@@ -32,6 +32,7 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({
                 style={{
                     transform: `translate(-50%, -100%) rotate(${gameState.targetRotation}deg)`,
                     border: (debug) ? 'solid 1px pink' : '',
+                    zIndex: 10,
                 }}
             >
                 <TargetComponent size={GAME_CONFIG.TARGET_RADIUS * 2} />
@@ -60,6 +61,7 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({
                     transform: `rotate(${marker.angle}deg) translateX(-50%) translateY(-300%)`,
                     transformOrigin: '0% 0%',
                     border: (debug||1) ? 'solid 1px red' : '', // debug
+                    zIndex: 15,
                 }}
             >
                 {marker.angle}
@@ -80,6 +82,7 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({
                         transform: `translateX(-50%) translateY(-50%) rotate(${apple.angle}deg) translateY(-${GAME_CONFIG.TARGET_RADIUS+30}px)`,
                         transformOrigin: '50% 50%',
                         border: (debug) ? 'solid 1px yellow' : '', // debug
+                        zIndex: -20,
                     }}
                 >
                     <Apple size={50} />
@@ -102,7 +105,7 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({
                         transformOrigin: '0% 0%',
                         left: '50%',
                         top: '50%',
-                        zIndex: debug ? 10 : -1,
+                        zIndex: debug ? 20 : -10,
                         border: debug ? 'solid 1px blue': '', // debug
                         borderTop: debug ? 'solid 1px red': '', // debug
                     }}
@@ -128,6 +131,7 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({
                         top: `${currentY}px`,
                         transform: 'translateX(-50%)',
                         transition: 'none',
+                        zIndex: 5,
                     }}
                 >
                     <Knife size={120} />
