@@ -40,6 +40,22 @@ export const HomePage: FC<{ gameFullState: GameFullState }> = ({ gameFullState }
                     <p className="text-gray-300 text-lg">
                         Hit the target, collect apples, avoid the knives!
                     </p>
+                    
+                    {/* Personal Best - Affichage discret */}
+                    {(gameFullState.gameState.bestScore > 0 || gameFullState.gameState.bestLevel > 0) && (
+                        <div className="text-center">
+                            <div className="inline-flex items-center gap-3 bg-black/20 backdrop-blur-sm px-4 py-2 rounded-full border border-purple-500/20">
+                                <span className="text-purple-300 text-sm">🏆 Best:</span>
+                                <span className="text-white text-sm font-medium">
+                                    Level {gameFullState.gameState.bestLevel}
+                                </span>
+                                <span className="text-gray-400">•</span>
+                                <span className="text-white text-sm font-medium">
+                                    {gameFullState.gameState.bestScore} pts
+                                </span>
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 {/* Game buttons */}
