@@ -25,7 +25,6 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({
         const TargetComponent = gameState.targetType === 'lemon' ? LemonTarget : WoodTarget;
 
         const markers = debug ? [0, 45, 90, 135, 180, 225, 270, 315].map((angle, id) => ({ id, angle })) : []
-        const lameLength = 80;
 
         return (
             <div
@@ -38,74 +37,81 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({
                 <TargetComponent size={GAME_CONFIG.TARGET_RADIUS * 2} />
 
                 {/* Render planted knives - only handles visible */}
-                {gameState.plantedKnives.map((knife) => {
-                    return (
-                        <div
-                            key={knife.id}
-                            className="absolute"
-                            title={`Knife #${knife.id} | angle=${knife.angle}`}
-                            style={{
-                                //transform: `rotate(${knife.angle}deg) translateX(-50%) translateY(${GAME_CONFIG.TARGET_RADIUS - lameLength}px)`,
-                                transform: `rotate(${(180+knife.angle)%360}deg) translateX(-50%) translateY(${GAME_CONFIG.TARGET_RADIUS - lameLength}px)`,
-                                transformOrigin: '0% 0%',
-                                left: '50%',
-                                top: '50%',
-                                zIndex: debug ? 10 : -1,
-                                border: debug ? 'solid 1px blue': '', // debug
-                                borderTop: debug ? 'solid 1px red': '', // debug
-                            }}
-                        >
-                            <Knife size={150} />
-                        </div>
-                    )
-                })}
+                {renderPlantedKnives()}
 
                 {/* Render apples */}
-                {gameState.apples.map((apple) => (
-                    !apple.collected && (
-                        <div
-                            key={apple.id}
-                            className="absolute"
-                            title={`Apple #${apple.id} | angle=${apple.angle}`}
-                            style={{
-                                //transform: `rotate(${apple.angle}deg) translateY(-${GAME_CONFIG.TARGET_RADIUS - 20}px)`,
-                                //transformOrigin: '50% 100%',
-                                left: '50%',
-                                top: '50%',
-                                transform: `translateX(-50%) translateY(-50%) rotate(${apple.angle}deg) translateY(-${GAME_CONFIG.TARGET_RADIUS+30}px)`,
-                                transformOrigin: '50% 50%',
-                                //left: '-10px',
-                                //top: '-10px',
-                                //marginLeft: '-15px',
-                                //marginTop: '-15px',
-                                border: (debug) ? 'solid 1px yellow' : '',
-                            }}
-                        >
-                            <Apple size={50} />
-                        </div>
-                    )
-                ))}
+                {renderApples()}
 
                 {/* Render markers */}
-                {markers.map((marker) => (
-                    <div
-                        key={marker.id}
-                        className="absolute"
-                        title={`Marker #${marker.id} | angle=${marker.angle}`}
-                        style={{
-                            left: '50%',
-                            top: '50%',
-                            transform: `rotate(${marker.angle}deg) translateX(-50%) translateY(-300%)`,
-                            transformOrigin: '0% 0%',
-                            border: (debug||1) ? 'solid 1px red' : '',
-                        }}
-                    >
-                        {marker.angle}
-                    </div>
-                ))}
+                {renderMarkers(markers)}
             </div>
         );
     };
+
+    const renderMarkers = (markers: {id: number, angle: number}[]) => {
+        return markers.map((marker) => (
+            <div
+                key={marker.id}
+                className="absolute"
+                title={`Marker #${marker.id} | angle=${marker.angle}`}
+                style={{
+                    left: '50%',
+                    top: '50%',
+                    transform: `rotate(${marker.angle}deg) translateX(-50%) translateY(-300%)`,
+                    transformOrigin: '0% 0%',
+                    border: (debug||1) ? 'solid 1px red' : '', // debug
+                }}
+            >
+                {marker.angle}
+            </div>
+        ));
+    }
+
+    const renderApples = () => {
+        return gameState.apples.map((apple) => (
+            !apple.collected && (
+                <div
+                    key={apple.id}
+                    className="absolute"
+                    title={`Apple #${apple.id} | angle=${apple.angle}`}
+                    style={{
+                        left: '50%',
+                        top: '50%',
+                        transform: `translateX(-50%) translateY(-50%) rotate(${apple.angle}deg) translateY(-${GAME_CONFIG.TARGET_RADIUS+30}px)`,
+                        transformOrigin: '50% 50%',
+                        border: (debug) ? 'solid 1px yellow' : '', // debug
+                    }}
+                >
+                    <Apple size={50} />
+                </div>
+            )
+        ));
+    }
+
+    const renderPlantedKnives = () => {
+        const lameLength = 80;
+
+        return gameState.plantedKnives.map((knife) => {
+            return (
+                <div
+                    key={knife.id}
+                    className="absolute"
+                    title={`Knife #${knife.id} | angle=${knife.angle}`}
+                    style={{
+                        transform: `rotate(${(180+knife.angle)%360}deg) translateX(-50%) translateY(${GAME_CONFIG.TARGET_RADIUS - lameLength}px)`,
+                        transformOrigin: '0% 0%',
+                        left: '50%',
+                        top: '50%',
+                        zIndex: debug ? 10 : -1,
+                        border: debug ? 'solid 1px blue': '', // debug
+                        borderTop: debug ? 'solid 1px red': '', // debug
+                    }}
+                >
+                    <Knife size={150} />
+                </div>
+            )
+        });
+    }
 
     const renderThrowingKnives = () => {
         return throwingKnives.map((knife) => {
@@ -136,9 +142,8 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({
         return (
             <div
                 className="current-knife"
-                onClick={onThrowKnife}
             >
-                <Knife size={150} />
+                <Knife size={120} />
             </div>
         );
     };
@@ -154,13 +159,15 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({
     };
 
     const onclickCanvas = () => {
+        onThrowKnife()
+
         // Debug
         //gameState.gameStatus = (gameState.gameStatus === 'playing') ? 'pause' : 'playing';
     }
 
     return (
         <div 
-            className="game-canvas"
+            className="game-canvas cursor-pointer"
             onClick={ () => onclickCanvas() }
             >
             {renderTarget()}
