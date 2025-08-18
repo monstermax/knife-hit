@@ -12,6 +12,12 @@ export const GamePage: FC<{ gameFullState: GameFullState }> = ({ gameFullState }
 
     return (
         <div className="game-container">
+            {/* Particules d'arrière-plan */}
+            <div className="game-background-particles"></div>
+            
+            {/* Gradient overlay pour plus de profondeur */}
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/5 to-black/10 pointer-events-none"></div>
+            
             <GameUI gameState={gameState} />
 
             {(gameState.gameStatus === 'playing' || 1) && (
