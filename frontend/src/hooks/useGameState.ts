@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 
 import { GameState, ThrowingKnife, PlantedKnife, AppleItem, PrivyUser, GameFullState } from '../types/game';
 import { generateLevelConfig, generatePreKnives, generateApples, checkKnifeCollision, checkAppleCollision, calculateScore, GAME_CONFIG } from '../utils/gameUtils';
+import { CrossAppAccountWithMetadata, useConnectWallet, usePrivy } from '@privy-io/react-auth';
 
 
 const fps = 40;
@@ -38,7 +39,15 @@ export const useGameState = (): GameFullState => {
         };
     });
 
+    const {ready, authenticated, user, login, logout } = usePrivy();
+    const { connectWallet } = useConnectWallet();
+
     const [throwingKnives, setThrowingKnives] = useState<ThrowingKnife[]>([]);
+
+    const [accountAddress, setAccountAddress] = useState<string>("");
+    const [username, setUsername] = useState<string>("");
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string>("");
 
 
     // Save apples/bestscore/bestlevel to localStorage whenever it changes
@@ -68,6 +77,64 @@ export const useGameState = (): GameFullState => {
 
         return () => clearInterval(interval);
     }, [gameState.gameStatus, gameState.rotationSpeed]);
+
+
+    useEffect(() => {
+        setAccountAddress("");
+        setUsername("");
+        setError("");
+
+        if (authenticated && user && ready && user.linkedAccounts.length > 0) {
+            const crossAppAccount = user.linkedAccounts.find(
+                account => account.type === "cross_app" && account.providerApp.id === "cmd8euall0037le0my79qpz42"
+            ) as CrossAppAccountWithMetadata;
+
+            if (crossAppAccount?.embeddedWallets.length > 0) {
+                const walletAddress = crossAppAccount.embeddedWallets[0].address;
+                setAccountAddress(walletAddress);
+                fetchUsername(walletAddress);
+
+            } else {
+                setError("Monad Games ID account not found");
+            }
+
+        } else if (authenticated && user && ready) {
+            setError("Please link your Monad Games ID account");
+        }
+
+    }, [authenticated, user, ready]);
+
+
+    const fetchUsername = async (walletAddress: string) => {
+        setLoading(true);
+        setError("");
+
+        try {
+            const response = await fetch(`https://monad-games-id-site.vercel.app/api/check-wallet?wallet=${walletAddress}`);
+            if (response.ok) {
+                const data = await response.json();
+                setUsername(data.hasUsername ? data.user.username : "");
+            }
+
+        } catch (err) {
+            console.error("Error fetching username:", err);
+            setError("Failed to load username");
+
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleCreateWallet = async () => {
+        try {
+            // Utiliser connectWallet sans paramètres pour créer un wallet intégré
+            await connectWallet();
+
+        } catch (err) {
+            console.error("Error creating wallet:", err);
+            setError("Failed to create wallet");
+        }
+    };
 
 
     const startGame = useCallback((user?: PrivyUser | null) => {
@@ -237,9 +304,9 @@ export const useGameState = (): GameFullState => {
                             : prev.apples,
                     };
 
-                    console.log(`currentAngle:`, gameState.targetRotation)
-                    console.log(`impactAngle:`, impactAngle)
-                    console.log(`newPlantedKnife:`, newPlantedKnife)
+                    //console.log(`currentAngle:`, gameState.targetRotation)
+                    //console.log(`impactAngle:`, impactAngle)
+                    //console.log(`newPlantedKnife:`, newPlantedKnife)
 
                     // Check if level is complete
                     if (newState.knivesRemaining <= 0) {
@@ -264,8 +331,17 @@ export const useGameState = (): GameFullState => {
 
 
     return {
+        authenticated,
+        user,
+        accountAddress,
+        username,
+        ready,
+        loading,
+        error,
         gameState,
         throwingKnives,
+        login,
+        logout,
         startGame,
         nextLevel,
         throwKnife,
@@ -273,6 +349,11 @@ export const useGameState = (): GameFullState => {
         pauseGame,
         unpauseGame,
         quitGame,
+        setAccountAddress,
+        setUsername,
+        setLoading,
+        setError,
+        handleCreateWallet,
     };
 };
 

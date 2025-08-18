@@ -1,7 +1,7 @@
-import { FC, useEffect, useMemo } from "react";
-import { CrossAppAccountWithMetadata, usePrivy } from '@privy-io/react-auth';
+import { FC, useEffect, useMemo, useState } from "react";
+import { CrossAppAccountWithMetadata, useConnectWallet, usePrivy } from '@privy-io/react-auth';
 
-import MonadGamesId from "@/components/MonadGamesId";
+import { MonadGamesId } from "@/components/MonadGamesId";
 import { Button } from '@/components/ui/button'
 
 import type { GameFullState } from "@/types/game";
@@ -9,9 +9,12 @@ import { getGame, getPlayerDataPerGame, registerGame, updatePlayerData } from "@
 import { getUserAddress } from "@/utils/gameUtils";
 
 
+const debug = false;
+
+
 export const HomePage: FC<{ gameFullState: GameFullState }> = ({ gameFullState }) => {
-    const {ready, authenticated, user, login } = usePrivy();
-    const { startGame } = gameFullState;
+    const { ready, authenticated, user, accountAddress, error, loading, username, login, startGame, handleCreateWallet } = gameFullState;
+
 
     const playerAddress = useMemo(() => getUserAddress(user), [user]);
 
@@ -27,6 +30,8 @@ export const HomePage: FC<{ gameFullState: GameFullState }> = ({ gameFullState }
             login();
         }
     };
+
+
 
 
     return (
@@ -51,33 +56,47 @@ export const HomePage: FC<{ gameFullState: GameFullState }> = ({ gameFullState }
                         🎮 Play as Guest
                     </button>
 
-                    <button
-                        onClick={connectAndPlay}
-                        className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-xl text-xl transition-all transform hover:scale-105 shadow-lg cursor-pointer"
-                        disabled={!ready}
-                    >
-                        {!ready ? "Loading..." : authenticated ? "🚀 Play Connected" : "🚀 Connect & Play"}
-                    </button>
+                    {!authenticated && (
+                        <>
+                            <button
+                                onClick={connectAndPlay}
+                                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-xl text-xl transition-all transform hover:scale-105 shadow-lg cursor-pointer"
+                                disabled={!ready}
+                            >
+                                {!ready ? "Loading..." : "🚀 Connect"}
+                            </button>
+                        </>
+                    )}
+
+                    {authenticated && (
+                        <>
+                            <button
+                                onClick={connectAndPlay}
+                                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-xl text-xl transition-all transform hover:scale-105 shadow-lg cursor-pointer"
+                                disabled={!ready}
+                            >
+                                {!ready ? "Loading..." : "🚀 Play Connected"}
+                            </button>
+                        </>
+                    )}
                 </div>
 
                 {/* Connected status */}
                 {authenticated && (
                     <div className="space-y-4">
-                        <div className="text-center">
-                            <div className="inline-flex items-center gap-2 bg-green-700 text-white px-4 py-2 rounded-lg">
-                                ✅ Wallet Connected
-                            </div>
-                        </div>
-                        <MonadGamesId />
+                        <MonadGamesId gameFullState={gameFullState} />
                     </div>
                 )}
 
-                <hr />
-
-                <Button onClick={() => getGame().then(console.log)}>getGame</Button>
-                <Button onClick={() => registerGame()}>registerGame</Button>
-                <Button onClick={() => getPlayerDataPerGame(playerAddress ?? '').then(console.log)}>getPlayerDataPerGame</Button>
-                <Button onClick={() => updatePlayerData(playerAddress ?? '', 10)}>updatePlayerData</Button>
+                {debug && (
+                    <>
+                        <hr />
+                        <Button onClick={() => getGame().then(console.log)}>getGame</Button>
+                        <Button onClick={() => registerGame()}>registerGame</Button>
+                        <Button onClick={() => getPlayerDataPerGame(playerAddress ?? '').then(console.log)}>getPlayerDataPerGame</Button>
+                        <Button onClick={() => updatePlayerData(playerAddress ?? '', 10)}>updatePlayerData</Button>
+                    </>
+                )}
 
             </div>
         </div>

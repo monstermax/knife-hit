@@ -1,4 +1,4 @@
-import type { usePrivy } from '@privy-io/react-auth';
+import type { LoginModalOptions, usePrivy, User } from '@privy-io/react-auth';
 
 
 export type PrivyUser = ReturnType<typeof usePrivy>['user'];
@@ -22,8 +22,17 @@ export interface AppleItem {
 }
 
 export type GameFullState = {
+    authenticated: boolean;
+    user: User | null;
     gameState: GameState;
     throwingKnives: ThrowingKnife[];
+    accountAddress: string,
+    username: string,
+    ready: boolean,
+    loading: boolean,
+    error: string,
+    login: (options?: LoginModalOptions | React.MouseEvent<any, any>) => void;
+    logout: () => Promise<void>;
     startGame: (user?: PrivyUser | null) => void;
     nextLevel: () => void;
     throwKnife: () => void;
@@ -31,6 +40,11 @@ export type GameFullState = {
     pauseGame: () => void;
     unpauseGame: () => void;
     quitGame: () => void;
+    setAccountAddress: React.Dispatch<React.SetStateAction<string>>,
+    setUsername: React.Dispatch<React.SetStateAction<string>>,
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+    setError: React.Dispatch<React.SetStateAction<string>>,
+    handleCreateWallet: () => Promise<void>,
 }
 
 export interface GameState {

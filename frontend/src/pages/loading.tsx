@@ -5,8 +5,7 @@ import type { GameFullState } from "@/types/game";
 
 
 export const LoadingPage: FC<{ gameFullState: GameFullState }> = ({ gameFullState }) => {
-    const {ready } = usePrivy();
-    const { gameState, quitGame } = gameFullState;
+    const { ready, gameState, quitGame } = gameFullState;
 
     // Transition from loading to home when Privy is ready
     useEffect(() => {
