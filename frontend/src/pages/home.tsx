@@ -20,7 +20,7 @@ export const HomePage: FC<{ gameFullState: GameFullState }> = ({ gameFullState }
     };
 
     const connectAndPlay = () => {
-        if (authenticated) {
+        if (authenticated && accountAddress) {
             startGame(accountAddress);
 
         } else {
@@ -40,7 +40,7 @@ export const HomePage: FC<{ gameFullState: GameFullState }> = ({ gameFullState }
                     <p className="text-gray-300 text-lg">
                         Hit the target, collect apples, avoid the knives!
                     </p>
-                    
+
                     {/* Personal Best - Affichage discret */}
                     {(gameFullState.gameState.bestScore > 0 || gameFullState.gameState.bestLevel > 0) && (
                         <div className="text-center">
@@ -84,9 +84,9 @@ export const HomePage: FC<{ gameFullState: GameFullState }> = ({ gameFullState }
                             <button
                                 onClick={connectAndPlay}
                                 className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-xl text-xl transition-all transform hover:scale-105 shadow-lg cursor-pointer"
-                                disabled={!ready}
+                                disabled={!ready || !accountAddress}
                             >
-                                {!ready ? "Loading..." : "🚀 Play Connected"}
+                                {(!ready || !accountAddress) ? "Loading..." : "🚀 Play Connected"}
                             </button>
                         </>
                     )}
