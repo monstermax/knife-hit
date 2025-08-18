@@ -8,7 +8,7 @@ import type { GameFullState } from "@/types/game";
 
 
 export const GamePage: FC<{ gameFullState: GameFullState }> = ({ gameFullState }) => {
-    const { gameState, throwingKnives, accountAddress, startGame, throwKnife, nextLevel, resetGame, pauseGame, unpauseGame, quitGame } = gameFullState;
+    const { gameState, throwingKnives, startGame, throwKnife, nextLevel, resetGame, pauseGame, unpauseGame, quitGame } = gameFullState;
 
     return (
         <div className="game-container">
@@ -24,7 +24,6 @@ export const GamePage: FC<{ gameFullState: GameFullState }> = ({ gameFullState }
 
             <GameOverlay
                 gameState={gameState}
-                accountAddress={accountAddress}
                 onStartGame={startGame}
                 onNextLevel={nextLevel}
                 onResetGame={resetGame}

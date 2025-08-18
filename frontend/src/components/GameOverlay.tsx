@@ -8,7 +8,6 @@ import type { GameState } from '../types/game';
 
 interface GameOverlayProps {
     gameState: GameState;
-    accountAddress: string | null;
     onStartGame: () => void;
     onNextLevel: () => void;
     onResetGame: () => void;
@@ -18,12 +17,11 @@ interface GameOverlayProps {
 }
 
 
-const debug = true;
+const debug = false;
 
 
 export const GameOverlay: React.FC<GameOverlayProps> = ({
     gameState,
-    accountAddress,
     onStartGame,
     onNextLevel,
     onResetGame,
