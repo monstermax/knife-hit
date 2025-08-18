@@ -1,5 +1,6 @@
 
-const apiEndpoint = "http://localhost:5686";
+//const apiEndpoint = "http://localhost:5686";
+const apiEndpoint = "";
 
 
 export const registerGame = () => {

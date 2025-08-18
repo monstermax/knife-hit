@@ -56,6 +56,15 @@ async function main() {
     app.use(cors());
     app.use(express.json());
 
+    if (process.argv.includes('--dev')) {
+        // dev
+        //app.use( /* TODO: proxy to http://localhost:5685 */ );
+
+    } else {
+        // prod
+        app.use(express.static(`${__dirname}/../../frontend/dist/`))
+    }
+
 
     // Route GET /api/playerDataPerGame
     app.get('/api/playerDataPerGame', async (req: Request, res: Response) => {

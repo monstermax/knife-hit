@@ -77,7 +77,7 @@ export const HomePage: FC<{ gameFullState: GameFullState }> = ({ gameFullState }
                 <Button onClick={() => getGame().then(console.log)}>getGame</Button>
                 <Button onClick={() => registerGame()}>registerGame</Button>
                 <Button onClick={() => getPlayerDataPerGame(playerAddress ?? '').then(console.log)}>getPlayerDataPerGame</Button>
-                <Button onClick={() => updatePlayerData(playerAddress ?? '')}>updatePlayerData</Button>
+                <Button onClick={() => updatePlayerData(playerAddress ?? '', 10)}>updatePlayerData</Button>
 
             </div>
         </div>
