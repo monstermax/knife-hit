@@ -1,4 +1,5 @@
 
+import { CrossAppAccountWithMetadata, User } from '@privy-io/react-auth';
 import { PlantedKnife, AppleItem, LevelConfig, Position } from '../types/game';
 
 
@@ -143,4 +144,21 @@ export const checkAppleCollision = (
 export const calculateScore = (level: number, applesCollected: number): number => {
     return level * 10 + applesCollected * 5;
 };
+
+
+
+export const getUserAddress = (user: User | null) => {
+    if (user) {
+        const crossAppAccount = user.linkedAccounts.find(
+            account => account.type === "cross_app" && account.providerApp.id === "cmd8euall0037le0my79qpz42"
+        ) as CrossAppAccountWithMetadata;
+
+        if (crossAppAccount?.embeddedWallets.length > 0) {
+            const walletAddress = crossAppAccount.embeddedWallets[0].address;
+            return walletAddress;
+        }
+    }
+
+    return null;
+}
 

@@ -190,6 +190,7 @@ export const useGameState = (): GameFullState => {
             } else {
                 // Knife has reached target
                 // Calculate everything at the exact moment of impact
+
                 setGameState(prev => {
                     const currentTargetRotation = 360 - prev.targetRotation;
                     // Calculate the impact angle relative to the current target rotation

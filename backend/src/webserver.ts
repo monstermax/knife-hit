@@ -15,6 +15,8 @@ import LEADERBOARD_ABI from './contract/leaderboard.json';
 const PORT = 5686;
 const CONTRACT_ADDRESS = '0xceCBFF203C8B6044F52CE23D914A1bfD997541A4'; // Leaderboard => https://testnet.monadexplorer.com/address/0xceCBFF203C8B6044F52CE23D914A1bfD997541A4?tab=Contract
 
+//const gameBotAddress = '0xCCF8BA457dCad7eE6A0361c96846a0f79744b113';
+
 
 // Fonction pour obtenir la clé privée
 function getPrivateKey(): `0x${string}` {
@@ -58,22 +60,25 @@ async function main() {
     // Route GET /api/playerDataPerGame
     app.get('/api/playerDataPerGame', async (req: Request, res: Response) => {
         try {
-            const { game, player } = req.query;
+            let { game, player } = req.query;
+
+            game = game || walletClient.account.address;
 
             if (!game || !player) {
                 return res.status(400).json({ error: 'Missing game or player address' });
             }
-
             const data = await publicClient.readContract({
                 address: CONTRACT_ADDRESS,
                 abi: LEADERBOARD_ABI,
                 functionName: 'playerDataPerGame',
                 args: [game, player],
-            }) as { score: bigint, transactions: bigint };
+            }) as [bigint, bigint]; // [score, transactions]
+
+            console.log('result:', data)
 
             res.json({
                 success: true,
-                data,
+                data: { score: Number(data[0]), transactions: Number(data[1]) },
             });
 
         } catch (error) {
@@ -101,7 +106,7 @@ async function main() {
 
             res.json({
                 success: true,
-                score,
+                score: Number(score),
             });
 
         } catch (error) {
@@ -114,7 +119,9 @@ async function main() {
     // Route GET /api/games
     app.get('/api/games', async (req: Request, res: Response) => {
         try {
-            const { game } = req.query;
+            let { game } = req.query;
+
+            game = game || walletClient.account.address;
 
             if (!game) {
                 return res.status(400).json({ error: 'Missing game address' });
@@ -125,7 +132,7 @@ async function main() {
                 abi: LEADERBOARD_ABI,
                 functionName: 'games',
                 args: [game],
-            }) as { game: string, image: string, name: string, url: string };
+            }) as [string, string, string, string]; // [game, image, name, url];
 
             res.json({
                 success: true,
@@ -142,7 +149,9 @@ async function main() {
     // Route POST /api/registerGame
     app.post('/api/registerGame', async (req: Request, res: Response) => {
         try {
-            const { game, name, image, url } = req.body;
+            let { game, name, image, url } = req.body;
+
+            game = game || walletClient.account.address;
 
             if (!game || !name || !image || !url) {
                 return res.status(400).json({ error: 'Missing required parameters' });
@@ -159,10 +168,12 @@ async function main() {
             const hash = await walletClient.writeContract(request);
             const receipt = await publicClient.waitForTransactionReceipt({ hash });
 
+            console.log('registerGame receipt:', receipt)
+
             res.json({
                 success: true,
                 transactionHash: hash,
-                receipt,
+                //receipt,
             });
 
         } catch (error) {
@@ -192,10 +203,12 @@ async function main() {
             const hash = await walletClient.writeContract(request);
             const receipt = await publicClient.waitForTransactionReceipt({ hash });
 
+            console.log('updatePlayerData receipt:', receipt)
+
             res.json({
                 success: true,
                 transactionHash: hash,
-                receipt,
+                //receipt,
             });
 
         } catch (error) {
@@ -208,7 +221,9 @@ async function main() {
     // Route POST /api/unregisterGame
     app.post('/api/unregisterGame', async (req: Request, res: Response) => {
         try {
-            const { game } = req.body;
+            let { game } = req.body;
+
+            game = game || walletClient.account.address;
 
             if (!game) {
                 return res.status(400).json({ error: 'Missing game address' });

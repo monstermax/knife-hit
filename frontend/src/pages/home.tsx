@@ -1,15 +1,19 @@
-import { FC } from "react";
-import { usePrivy } from '@privy-io/react-auth';
+import { FC, useEffect, useMemo } from "react";
+import { CrossAppAccountWithMetadata, usePrivy } from '@privy-io/react-auth';
 
 import MonadGamesId from "@/components/MonadGamesId";
+import { Button } from '@/components/ui/button'
 
 import type { GameFullState } from "@/types/game";
+import { getGame, getPlayerDataPerGame, registerGame, updatePlayerData } from "@/utils/backend_api";
+import { getUserAddress } from "@/utils/gameUtils";
 
 
 export const HomePage: FC<{ gameFullState: GameFullState }> = ({ gameFullState }) => {
     const {ready, authenticated, user, login } = usePrivy();
     const { startGame } = gameFullState;
 
+    const playerAddress = useMemo(() => getUserAddress(user), [user]);
 
     const playAsGuest = () => {
         startGame();
@@ -67,6 +71,14 @@ export const HomePage: FC<{ gameFullState: GameFullState }> = ({ gameFullState }
                         <MonadGamesId />
                     </div>
                 )}
+
+                <hr />
+
+                <Button onClick={() => getGame().then(console.log)}>getGame</Button>
+                <Button onClick={() => registerGame()}>registerGame</Button>
+                <Button onClick={() => getPlayerDataPerGame(playerAddress ?? '').then(console.log)}>getPlayerDataPerGame</Button>
+                <Button onClick={() => updatePlayerData(playerAddress ?? '')}>updatePlayerData</Button>
+
             </div>
         </div>
     );
