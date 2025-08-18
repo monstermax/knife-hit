@@ -33,7 +33,7 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
     useEffect(() => {
         if (gameState.gameStatus === 'levelComplete') {
             // go to next level
-            const timer = setTimeout(onNextLevel, 500);
+            const timer = setTimeout(onNextLevel, 1000);
             return () => clearTimeout(timer);
         }
 
