@@ -7,10 +7,11 @@ import type { GameState } from '../types/game';
 
 interface GameUIProps {
   gameState: GameState;
+  onQuitGame?: () => void;
 }
 
 
-export const GameUI: React.FC<GameUIProps> = ({ gameState }) => {
+export const GameUI: React.FC<GameUIProps> = ({ gameState, onQuitGame }) => {
   const renderStageTitle = () => {
     if (gameState.isBossLevel) {
       return (
@@ -29,7 +30,7 @@ export const GameUI: React.FC<GameUIProps> = ({ gameState }) => {
 
   return (
     <div className="game-ui">
-      {/* Score avec effet glassmorphism */}
+      {/* Score */}
       <div className="bg-black/20 backdrop-blur-sm px-4 py-2 rounded-full border border-yellow-400/30 shadow-lg">
         <div className="score-display flex items-center gap-2">
           <span className="text-yellow-400 text-sm">💰</span>
@@ -37,17 +38,31 @@ export const GameUI: React.FC<GameUIProps> = ({ gameState }) => {
         </div>
       </div>
 
-      {/* Stage title amélioré */}
+      {/* Stage title */}
       <div className="bg-black/20 backdrop-blur-sm px-6 py-2 rounded-full border border-white/20 shadow-lg">
         {renderStageTitle()}
       </div>
 
-      {/* Apple counter modernisé */}
-      <div className="bg-black/20 backdrop-blur-sm px-4 py-2 rounded-full border border-green-400/30 shadow-lg">
-        <div className="apple-display flex items-center gap-2">
-          <Apple size={24} />
-          <span className="text-xl font-bold text-green-300 drop-shadow-lg">{gameState.totalApples}</span>
+      {/* Section droite avec apple counter et bouton quit */}
+      <div className="flex items-center gap-3">
+        {/* Apple counter */}
+        <div className="bg-black/20 backdrop-blur-sm px-4 py-2 rounded-full border border-green-400/30 shadow-lg">
+          <div className="apple-display flex items-center gap-2">
+            <Apple size={24} />
+            <span className="text-xl font-bold text-green-300 drop-shadow-lg">{gameState.totalApples}</span>
+          </div>
         </div>
+
+        {/* Bouton Quit Game */}
+        {onQuitGame && (
+          <button
+            onClick={onQuitGame}
+            className="bg-black/20 backdrop-blur-sm px-4 py-2 rounded-full border border-red-400/30 shadow-lg hover:bg-red-500/20 transition-all duration-200 group cursor-pointer"
+            title="Leave game"
+          >
+            <span className="text-red-400 group-hover:text-red-300 text-xl">🚪</span>
+          </button>
+        )}
       </div>
     </div>
   );
