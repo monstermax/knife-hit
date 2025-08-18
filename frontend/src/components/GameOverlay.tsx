@@ -71,48 +71,38 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
 
     if (gameState.gameStatus === 'gameOver') {
         return (
-            <div className="game-over-overlay">
-                <div className="bg-black/80 backdrop-blur-sm p-8 rounded-2xl border border-red-400/30 shadow-2xl max-w-md mx-auto">
-                    {/* Game Over Title with animation effect */}
-                    <div className="text-center mb-6">
-                        <div className="text-6xl mb-2">💀</div>
-                        <h2 className="text-4xl font-bold text-red-400 mb-2 drop-shadow-lg">Game Over!</h2>
-                        <div className="w-16 h-1 bg-gradient-to-r from-red-500 to-red-700 mx-auto rounded-full"></div>
+            <div className="game-over-overlay select-none">
+                <div className="bg-black/80 backdrop-blur-sm p-6 rounded-2xl border border-red-400/30 shadow-2xl max-w-lg mx-auto">
+                    {/* Game Over Title - Compact */}
+                    <div className="text-center mb-4">
+                        <div className="flex items-center justify-center gap-3 mb-3">
+                            <span className="text-4xl">💀</span>
+                            <h2 className="text-3xl font-bold text-red-400">Game Over!</h2>
+                        </div>
                     </div>
 
-                    {/* Stats Section */}
-                    <div className="space-y-4 mb-8">
-                        {/* Current Game Stats */}
-                        <div className="bg-gray-800/50 p-4 rounded-xl border border-gray-600/30">
-                            <h3 className="text-yellow-400 font-semibold mb-3 text-center">🎯 Final Score</h3>
-                            <div className="grid grid-cols-2 gap-4 text-center">
-                                <div>
-                                    <div className="text-2xl font-bold text-white">{gameState.level}</div>
-                                    <div className="text-sm text-gray-300">Level</div>
-                                </div>
-                                <div>
-                                    <div className="text-2xl font-bold text-white">{gameState.score}</div>
-                                    <div className="text-sm text-gray-300">Score</div>
-                                </div>
+                    {/* Stats en une seule ligne */}
+                    <div className="bg-gray-800/30 p-4 rounded-xl mb-4">
+                        <div className="grid grid-cols-5 gap-4 text-center">
+                            <div>
+                                <div className="text-2xl font-bold text-white">{gameState.level}</div>
+                                <div className="text-xs text-gray-300">Level</div>
                             </div>
-                            <div className="mt-3 text-center">
-                                <div className="text-lg font-semibold text-green-400">{gameState.totalApples} 🍎</div>
-                                <div className="text-xs text-gray-400">Apples Collected</div>
+                            <div>
+                                <div className="text-2xl font-bold text-white">{gameState.score}</div>
+                                <div className="text-xs text-gray-300">Score</div>
                             </div>
-                        </div>
-
-                        {/* Best Records */}
-                        <div className="bg-gradient-to-r from-purple-900/30 to-blue-900/30 p-4 rounded-xl border border-purple-500/30">
-                            <h3 className="text-purple-300 font-semibold mb-3 text-center">🏆 Personal Best</h3>
-                            <div className="grid grid-cols-2 gap-4 text-center">
-                                <div>
-                                    <div className="text-xl font-bold text-purple-200">{gameState.bestLevel}</div>
-                                    <div className="text-xs text-purple-300">Best Level</div>
-                                </div>
-                                <div>
-                                    <div className="text-xl font-bold text-purple-200">{gameState.bestScore}</div>
-                                    <div className="text-xs text-purple-300">Best Score</div>
-                                </div>
+                            <div>
+                                <div className="text-xl font-bold text-green-400">{gameState.totalApples} 🍎</div>
+                                <div className="text-xs text-gray-400">Apples</div>
+                            </div>
+                            <div>
+                                <div className="text-xl font-bold text-purple-300">{gameState.bestLevel}</div>
+                                <div className="text-xs text-purple-300">Best Lv</div>
+                            </div>
+                            <div>
+                                <div className="text-xl font-bold text-purple-300">{gameState.bestScore}</div>
+                                <div className="text-xs text-purple-300">Best Sc</div>
                             </div>
                         </div>
                     </div>
@@ -121,16 +111,16 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
                     <div className="flex gap-3">
                         <button
                             onClick={onResetGame}
-                            className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-3 px-6 rounded-xl transition-all transform hover:scale-105 hover:shadow-lg shadow-blue-500/25"
+                            className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-2 px-4 rounded-lg transition-all transform hover:scale-105"
                         >
-                            <span className="text-lg">🔄</span> Try Again
+                            🔄 Try Again
                         </button>
 
                         <button
                             onClick={onBackHome}
-                            className="flex-1 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-bold py-3 px-6 rounded-xl transition-all transform hover:scale-105 hover:shadow-lg"
+                            className="flex-1 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-bold py-2 px-4 rounded-lg transition-all transform hover:scale-105"
                         >
-                            <span className="text-lg">🏠</span> Home
+                            🏠 Home
                         </button>
                     </div>
                 </div>
@@ -140,7 +130,7 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
 
     if (gameState.gameStatus === 'levelComplete') {
         return (
-            <div className="level-complete-overlay">
+            <div className="level-complete-overlay select-none">
                 <div className="flex flex-col items-center justify-center">
                     {/* Container avec fond et bordure */}
                     <div className="bg-black/70 backdrop-blur-sm p-8 rounded-2xl border-2 border-green-400/50 shadow-2xl shadow-green-500/25 animate-pulse">

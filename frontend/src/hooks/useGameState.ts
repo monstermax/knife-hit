@@ -273,7 +273,11 @@ export const useGameState = (): GameFullState => {
 
                     // Check collision with existing knives at impact moment
                     if (checkKnifeCollision(impactAngle, prev.plantedKnives)) {
-                        const newState: GameState = { ...prev, gameStatus: 'gameOver' };
+                        const newState: GameState = { ...prev, gameStatus: 'pause' };
+
+                        setTimeout(() => {
+                            setGameState(prev => ({ ...prev, gameStatus: 'gameOver' }))
+                        }, 1000)
 
                         // TODO: animation couteau qui rebondit
 
@@ -319,7 +323,11 @@ export const useGameState = (): GameFullState => {
 
                         // TODO animation cible qui explose
 
-                        return { ...newState, gameStatus: 'levelComplete' };
+                        setTimeout(() => {
+                            setGameState(prev => ({ ...prev, gameStatus: 'levelComplete' }))
+                        }, 300)
+
+                        return { ...newState, gameStatus: 'pause' };
                     }
 
                     return newState;
