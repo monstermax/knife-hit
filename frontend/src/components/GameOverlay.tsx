@@ -33,7 +33,7 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
     useEffect(() => {
         if (gameState.gameStatus === 'levelComplete') {
             // go to next level
-            const timer = setTimeout(onNextLevel, 300);
+            const timer = setTimeout(onNextLevel, 500);
             return () => clearTimeout(timer);
         }
 
@@ -139,24 +139,40 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
     }
 
     if (gameState.gameStatus === 'levelComplete') {
-
         return (
             <div className="level-complete-overlay">
-                <h2 className="text-3xl font-bold mb-4 text-green-400">
-                    {gameState.isBossLevel ? 'Boss Defeated!' : 'Level Complete!'}
-                </h2>
-                <p className="text-lg mb-2">Level: {gameState.level}</p>
-                <p className="text-lg mb-2">Score: {gameState.score}</p>
-                <p className="text-lg mb-8">Total Apples: {gameState.totalApples}</p>
+                <div className="flex flex-col items-center justify-center">
+                    {/* Container avec fond et bordure */}
+                    <div className="bg-black/70 backdrop-blur-sm p-8 rounded-2xl border-2 border-green-400/50 shadow-2xl shadow-green-500/25 animate-pulse">
+                        {/* Icône dynamique selon le type de niveau */}
+                        <div className="text-center text-8xl mb-4">
+                            {gameState.isBossLevel ? '👑' : '✨'}
+                        </div>
 
-                {/*
-                <button
-                    onClick={onNextLevel}
-                    className="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg text-xl transition-colors"
-                >
-                    Next Level
-                </button>
-                */}
+                        {/* Titre principal - Grande taille pour impact visuel */}
+                        <h2 className="text-6xl font-bold text-center mb-4 bg-gradient-to-r from-green-400 via-emerald-400 to-green-500 bg-clip-text text-transparent drop-shadow-2xl">
+                            {gameState.isBossLevel ? 'BOSS' : 'LEVEL'}
+                        </h2>
+
+                        {/* Sous-titre épuré */}
+                        <div className="text-2xl font-semibold text-white text-center mb-6">
+                            {gameState.isBossLevel ? 'DEFEATED!' : 'COMPLETE!'}
+                        </div>
+
+                        {/* Informations essentielles en une ligne */}
+                        <div className="flex items-center justify-center gap-6 text-lg text-gray-200">
+                            <span className="font-bold">LV {gameState.level}</span>
+                            <span className="text-green-400">•</span>
+                            <span className="font-bold">{gameState.score} pts</span>
+                            {gameState.totalApples > 0 && (
+                                <>
+                                    <span className="text-green-400">•</span>
+                                    <span className="text-yellow-400">{gameState.totalApples} 🍎</span>
+                                </>
+                            )}
+                        </div>
+                    </div>
+                </div>
             </div>
         );
     }
