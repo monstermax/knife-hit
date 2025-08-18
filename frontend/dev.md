@@ -5,6 +5,7 @@
 config demo : https://demo.privy.io/
 
 doc : https://docs.privy.io/basics/react/quickstart
+doc : https://docs.privy.io/wallets/global-wallets/integrate-a-global-wallet/using-global-wallets
 
 
 
@@ -22,5 +23,14 @@ https://github.com/portdeveloper/basic-game-example
 
 # mission7-example-game
 https://github.com/portdeveloper/mission7-example-game
+
+
+
+
+
+# Concurrence
+- https://monadik.vercel.app/
+- https://dark-dungeon-mission7.vercel.app/
+- https://dev-mouch-knight.emberstake.xyz/
 
 

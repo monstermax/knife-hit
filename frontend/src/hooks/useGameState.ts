@@ -94,14 +94,8 @@ export const useGameState = (): GameFullState => {
 
 
     const pauseGame = useCallback(() => {
-        const levelConfig = generateLevelConfig(1);
-        const preKnives = generatePreKnives(levelConfig.preKnives);
-        const apples = generateApples(levelConfig.appleCount, preKnives);
-
         setGameState(prev => ({
             ...prev,
-            //targetRotation: 0,
-            //rotationSpeed: levelConfig.rotationSpeed,
             gameStatus: 'pause',
         }));
     }, []);

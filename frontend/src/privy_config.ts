@@ -5,34 +5,38 @@ export const appId = "cmeeuf2td01bjl70ckbe3yevz";
 
 
 const monadConfig = {
-    "id": 10143,
-    "name": "Monad Testnet",
-    "network": "monad-testnet",
-    "nativeCurrency": {
+    id: 10143,
+    name: "Monad Testnet",
+    network: "monad-testnet",
+    nativeCurrency: {
         "name": "Monad",
         "symbol": "MON",
         "decimals": 18
     },
-    "rpcUrls": {
+    rpcUrls: {
         "default": {
             "http": ["https://testnet1.monad.xyz"]
         }
     },
-    "blockExplorers": {
+    blockExplorers: {
         "default": {
             "name": "Monad Explorer",
             "url": "https://explorer-testnet.monad.xyz"
         }
     },
-    "testnet": true,
+    testnet: true,
 };
 
 
 export const privyConfig: PrivyClientConfig = {
     // Create embedded wallets for users who don't have a wallet
-    "loginMethodsAndOrder": {
+    loginMethodsAndOrder: {
         primary: ['privy:cmd8euall0037le0my79qpz42'],
     },
-    "defaultChain": monadConfig,
-    "supportedChains": [monadConfig],
+    defaultChain: monadConfig,
+    supportedChains: [monadConfig],
+    appearance: {
+        //theme: 'dark',
+        //loginMessage: 'hello',
+    },
 };

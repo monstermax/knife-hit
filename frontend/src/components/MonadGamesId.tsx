@@ -153,6 +153,17 @@ export default function MonadGamesId() {
                     >
                         Create Embedded Wallet
                     </button>
+
+                    <br />
+
+                    <div className="flex gap-2">
+                        <button
+                            onClick={logout}
+                            className="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded transition-colors cursor-pointer"
+                        >
+                            🚪 Logout
+                        </button>
+                    </div>
                 </div>
             )}
         </div>
