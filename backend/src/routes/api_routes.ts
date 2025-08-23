@@ -36,6 +36,8 @@ if (! privateKey) {
 
 const CONTRACT_ADDRESS = '0xceCBFF203C8B6044F52CE23D914A1bfD997541A4'; // Leaderboard => https://testnet.monadexplorer.com/address/0xceCBFF203C8B6044F52CE23D914A1bfD997541A4?tab=Contract
 
+const usedTokens: number[] = [];
+
 
 const account = privateKeyToAccount(privateKey);
 
@@ -59,7 +61,7 @@ export const apiRouter = express.Router();
 
 
 // Route GET /api/playerDataPerGame
-apiRouter.get('/api/playerDataPerGame', async (req: Request, res: Response) => {
+apiRouter.get('/playerDataPerGame', async (req: Request, res: Response) => {
     try {
         let { game, player } = req.query;
 
@@ -90,7 +92,7 @@ apiRouter.get('/api/playerDataPerGame', async (req: Request, res: Response) => {
 
 
 // Route GET /api/totalScoreOfPlayer
-apiRouter.get('/api/totalScoreOfPlayer', async (req: Request, res: Response) => {
+apiRouter.get('/totalScoreOfPlayer', async (req: Request, res: Response) => {
     try {
         const { player } = req.query;
 
@@ -118,7 +120,7 @@ apiRouter.get('/api/totalScoreOfPlayer', async (req: Request, res: Response) => 
 
 
 // Route GET /api/games
-apiRouter.get('/api/games', async (req: Request, res: Response) => {
+apiRouter.get('/games', async (req: Request, res: Response) => {
     try {
         let { game } = req.query;
 
@@ -148,7 +150,7 @@ apiRouter.get('/api/games', async (req: Request, res: Response) => {
 
 
 // Route POST /api/registerGame
-apiRouter.post('/api/registerGame', async (req: Request, res: Response) => {
+apiRouter.post('/registerGame', async (req: Request, res: Response) => {
     try {
         let { game, name, image, url } = req.body;
 
@@ -185,13 +187,27 @@ apiRouter.post('/api/registerGame', async (req: Request, res: Response) => {
 
 
 // Route POST /api/updatePlayerData
-apiRouter.post('/api/updatePlayerData', async (req: Request, res: Response) => {
+apiRouter.post('/updatePlayerData', async (req: Request, res: Response) => {
     try {
-        const { player, scoreAmount, transactionAmount } = req.body;
+        const { player, scoreAmount, transactionAmount, r } = req.body;
 
         if (!player || scoreAmount === undefined || transactionAmount === undefined) {
             return res.status(400).json({ error: 'Missing required parameters' });
         }
+
+        if (!Number(r)) {
+            return res.status(400).json({ error: 'Missing required token' });
+        }
+
+        if (Number(r) / Number(scoreAmount) !== Math.round(Number(r) / Number(scoreAmount))) {
+            return res.status(400).json({ error: 'Invalid token' });
+        }
+
+        if (usedTokens.includes(Number(r))) {
+            return res.status(400).json({ error: 'Used token' });
+        }
+
+        usedTokens.push(Number(r));
 
         const { request } = await publicClient.simulateContract({
             account,
@@ -220,7 +236,7 @@ apiRouter.post('/api/updatePlayerData', async (req: Request, res: Response) => {
 
 
 // Route POST /api/unregisterGame
-apiRouter.post('/api/unregisterGame', async (req: Request, res: Response) => {
+apiRouter.post('/unregisterGame', async (req: Request, res: Response) => {
     try {
         let { game } = req.body;
 

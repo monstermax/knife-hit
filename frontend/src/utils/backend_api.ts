@@ -78,11 +78,13 @@ export const updatePlayerData = (accountAddress: string, score: number): Promise
     if (!accountAddress) return Promise.resolve(null);
 
     const apiUrl = `${apiEndpoint}/api/updatePlayerData`;
+    const r = score * Math.round(Math.random() * 999999);
 
     const data = {
         player: accountAddress,
         scoreAmount: score,
         transactionAmount: 1,
+        r,
     };
 
     const url = apiUrl;

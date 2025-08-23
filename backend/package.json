@@ -1,7 +1,6 @@
 {
   "scripts": {
-    "start": "ts-node src/webserver.ts --prod",
-    "dev": "ts-node src/webserver.ts"
+    "start": "ts-node src/webserver.ts"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
