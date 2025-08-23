@@ -82,7 +82,7 @@ export const useGameState = (): GameFullState => {
 
             setGameState(prev => ({
                 ...prev,
-                targetRotation: (prev.targetRotation + prev.rotationSpeed * deltaTime * 100) % 360,
+                targetRotation: (prev.targetRotation + prev.rotationSpeed * deltaTime * 50) % 360,
             }));
 
             startTimeRef.current = timestamp;
