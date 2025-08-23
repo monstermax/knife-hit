@@ -117,23 +117,71 @@
 
     body {
         @apply bg-background text-foreground;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
     }
 }
 
-
-/* Knife Hit Game Styles */
+/* === NOUVEAU CADRE UI PRINCIPAL === */
 .game-container {
     background: radial-gradient(ellipse at center, #1e3a5f 0%, #0f2027 40%, #0a1a2e 100%);
     min-height: 100vh;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
     position: relative;
     overflow: hidden;
+    padding: 20px;
 }
 
-/* Particules d'arrière-plan */
+.game-frame {
+    width: min(100vw - 40px, 600px);
+    height: min(100vh - 40px, 800px);
+    max-width: 600px;
+    max-height: 800px;
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+/* Header avec UI */
+.game-header {
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    min-height: 70px;
+    z-index: 10;
+}
+
+/* Zone de jeu principale */
+.game-play-area {
+    flex: 1;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+}
+
+/* Canvas de jeu */
+.game-canvas {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+/* Particules d'arrière-plan optimisées */
 .game-background-particles {
     position: absolute;
     top: 0;
@@ -141,46 +189,42 @@
     width: 100%;
     height: 100%;
     background-image:
-        radial-gradient(2px 2px at 20px 30px, rgba(255, 255, 255, 0.3), transparent),
-        radial-gradient(2px 2px at 40px 70px, rgba(255, 255, 255, 0.2), transparent),
-        radial-gradient(1px 1px at 90px 40px, rgba(255, 255, 255, 0.4), transparent),
-        radial-gradient(1px 1px at 130px 80px, rgba(255, 255, 255, 0.3), transparent),
-        radial-gradient(2px 2px at 160px 30px, rgba(255, 255, 255, 0.2), transparent);
+        radial-gradient(1px 1px at 20px 30px, rgba(255, 255, 255, 0.2), transparent),
+        radial-gradient(1px 1px at 40px 70px, rgba(255, 255, 255, 0.15), transparent),
+        radial-gradient(1px 1px at 90px 40px, rgba(255, 255, 255, 0.25), transparent),
+        radial-gradient(1px 1px at 130px 80px, rgba(255, 255, 255, 0.2), transparent);
     background-repeat: repeat;
-    background-size: 200px 100px;
-    animation: float 20s ease-in-out infinite;
+    background-size: 150px 80px;
+    animation: float 25s ease-in-out infinite;
     pointer-events: none;
     z-index: 1;
 }
 
 @keyframes float {
     0%, 100% { transform: translateY(0px) translateX(0px); }
-    25% { transform: translateY(-10px) translateX(5px); }
-    50% { transform: translateY(-5px) translateX(-5px); }
-    75% { transform: translateY(-15px) translateX(3px); }
+    25% { transform: translateY(-8px) translateX(3px); }
+    50% { transform: translateY(-4px) translateX(-3px); }
+    75% { transform: translateY(-12px) translateX(2px); }
 }
 
+/* UI Elements repositionnés */
 .game-ui {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 10;
-    padding: 20px;
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
+    width: 100%;
     color: white;
     font-weight: bold;
+    gap: 16px;
 }
 
 .score-display {
-    font-size: 24px;
+    font-size: 20px;
     color: #ffd700;
 }
 
 .stage-display {
-    font-size: 18px;
+    font-size: 16px;
     text-align: center;
     color: white;
     font-weight: bold;
@@ -189,17 +233,12 @@
 .apple-display {
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 20px;
+    gap: 6px;
+    font-size: 18px;
     color: #4ade80;
 }
 
-.game-canvas {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-}
-
+/* Indicateurs de couteaux repositionnés */
 .knives-remaining {
     position: absolute;
     left: 20px;
@@ -209,16 +248,16 @@
     flex-direction: column;
     gap: 8px;
     z-index: 5;
-    background: rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(10px);
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(8px);
     padding: 12px 8px;
-    border-radius: 12px;
+    border-radius: 16px;
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .knife-indicator {
-    width: 32px;
-    height: 6px;
+    width: 28px;
+    height: 5px;
     background: linear-gradient(90deg, #e5e7eb 0%, #9ca3af 50%, #6b7280 100%);
     border-radius: 3px;
     transform: rotate(-45deg);
@@ -237,19 +276,20 @@
     border-radius: 3px;
 }
 
+/* Couteau courant */
 .current-knife {
     position: absolute;
-    bottom: 100px;
+    bottom: 80px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 5;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.15s ease;
     filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
 }
 
 .current-knife:hover {
-    transform: translateX(-50%) scale(1.1);
+    transform: translateX(-50%) scale(1.08);
     filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.4)) brightness(1.1);
 }
 
@@ -257,52 +297,59 @@
     transform: translateX(-50%) scale(0.95);
 }
 
+/* Cible */
 .target-container {
     position: absolute;
-    top: 50%;
+    top: 45%;
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 1;
+    /* Optimisation performance */
+    will-change: transform;
+    backface-visibility: hidden;
 }
 
-.game-over-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 20;
-    color: white;
-}
-
+/* Overlays */
+.game-over-overlay,
 .level-complete-overlay {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    /* background: rgba(0, 100, 0, 0.8); */
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     z-index: 20;
     color: white;
+    padding: 20px;
 }
 
-@keyframes rotate {
-    from {
-        transform: rotate(0deg);
-    }
+/* Home container pour cohérence */
+.home-container {
+    min-height: 100vh;
+    background: radial-gradient(ellipse at center, #1e3a5f 0%, #0f2027 40%, #0a1a2e 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
 
-    to {
-        transform: rotate(360deg);
-    }
+.loading-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(ellipse at center, #1e3a5f 0%, #0f2027 40%, #0a1a2e 100%);
+}
+
+/* Animations optimisées */
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
 .rotating {
@@ -312,24 +359,26 @@
 @keyframes knife-throw {
     0% {
         transform: translateY(0) scale(1);
+        opacity: 1;
     }
-
     100% {
-        transform: translateY(-400px) /* scale(0.8) */;
+        transform: translateY(-350px) scale(0.9);
+        opacity: 0.8;
     }
 }
 
 .knife-throwing {
-    animation: knife-throw 0.5s ease-out forwards;
+    animation: knife-throw 0.4s ease-out forwards;
 }
 
+/* Effets visuels */
 .sparkle {
     position: absolute;
-    width: 4px;
-    height: 4px;
+    width: 3px;
+    height: 3px;
     background: #ffd700;
     border-radius: 50%;
-    animation: sparkle 1s ease-out forwards;
+    animation: sparkle 0.8s ease-out forwards;
 }
 
 @keyframes sparkle {
@@ -337,15 +386,12 @@
         opacity: 1;
         transform: scale(0);
     }
-
     50% {
         opacity: 1;
-        transform: scale(1);
+        transform: scale(1.2);
     }
-
     100% {
         opacity: 0;
         transform: scale(0);
     }
 }
-

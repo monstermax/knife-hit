@@ -1,11 +1,8 @@
-import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 
 import { GameState, ThrowingKnife, PlantedKnife, AppleItem, PrivyUser, GameFullState } from '../types/game';
 import { generateLevelConfig, generatePreKnives, generateApples, checkKnifeCollision, checkAppleCollision, calculateScore, GAME_CONFIG, getUserAddress } from '../utils/gameUtils';
 import { CrossAppAccountWithMetadata, useConnectWallet, usePrivy } from '@privy-io/react-auth';
-
-
-const fps = 40;
 
 
 export const useGameState = (): GameFullState => {
@@ -39,7 +36,7 @@ export const useGameState = (): GameFullState => {
         };
     });
 
-    const {ready, authenticated, user, login, logout } = usePrivy();
+    const { ready, authenticated, user, login, logout } = usePrivy();
     const { connectWallet } = useConnectWallet();
 
     const [throwingKnives, setThrowingKnives] = useState<ThrowingKnife[]>([]);
@@ -49,7 +46,9 @@ export const useGameState = (): GameFullState => {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
-    //const accountAddress = useMemo(() => getUserAddress(user), [user]);
+    // Refs pour l'animation optimisée
+    const animationRef = useRef<number | undefined>(undefined);
+    const startTimeRef = useRef<number>(0);
 
     // Save apples/bestscore/bestlevel to localStorage whenever it changes
     useEffect(() => {
@@ -64,21 +63,42 @@ export const useGameState = (): GameFullState => {
         localStorage.setItem('knife-hit-bestlevel', gameState.bestLevel.toString());
     }, [gameState.bestLevel]);
 
-
-    // Target rotation animation
+    // Animation de rotation optimisée avec requestAnimationFrame
     useEffect(() => {
-        if (gameState.gameStatus !== 'playing') return;
+        if (gameState.gameStatus !== 'playing') {
+            if (animationRef.current) {
+                cancelAnimationFrame(animationRef.current);
+                animationRef.current = undefined;
+            }
+            return;
+        }
 
-        const interval = setInterval(() => {
+        const animate = (timestamp: number) => {
+            if (!startTimeRef.current) {
+                startTimeRef.current = timestamp;
+            }
+
+            const deltaTime = (timestamp - startTimeRef.current) / 1000; // Convert to seconds
+
             setGameState(prev => ({
                 ...prev,
-                targetRotation: (prev.targetRotation + prev.rotationSpeed * 3) % 360,
+                targetRotation: (prev.targetRotation + prev.rotationSpeed * deltaTime * 100) % 360,
             }));
-        }, 1000/fps);
 
-        return () => clearInterval(interval);
+            startTimeRef.current = timestamp;
+            animationRef.current = requestAnimationFrame(animate);
+        };
+
+        animationRef.current = requestAnimationFrame(animate);
+
+        return () => {
+            if (animationRef.current) {
+                cancelAnimationFrame(animationRef.current);
+                animationRef.current = undefined;
+            }
+            startTimeRef.current = 0;
+        };
     }, [gameState.gameStatus, gameState.rotationSpeed]);
-
 
     useEffect(() => {
         setAccountAddress(null);
@@ -105,7 +125,6 @@ export const useGameState = (): GameFullState => {
 
     }, [authenticated, user, ready]);
 
-
     const fetchUsername = async (walletAddress: string) => {
         setLoading(true);
         setError("");
@@ -128,15 +147,12 @@ export const useGameState = (): GameFullState => {
 
     const handleCreateWallet = async () => {
         try {
-            // Utiliser connectWallet sans paramètres pour créer un wallet intégré
             await connectWallet();
-
         } catch (err) {
             console.error("Error creating wallet:", err);
             setError("Failed to create wallet");
         }
     };
-
 
     const startGame = (playerAddress?: string | null) => {
         playerAddress = playerAddress ?? null;
@@ -163,8 +179,8 @@ export const useGameState = (): GameFullState => {
         }));
 
         setThrowingKnives([]);
+        startTimeRef.current = 0;
     };
-
 
     const pauseGame = useCallback(() => {
         setGameState(prev => ({
@@ -173,14 +189,13 @@ export const useGameState = (): GameFullState => {
         }));
     }, []);
 
-
     const unpauseGame = useCallback(() => {
         setGameState(prev => ({
             ...prev,
             gameStatus: 'playing',
         }));
+        startTimeRef.current = 0;
     }, []);
-
 
     const nextLevel = useCallback(() => {
         const nextLevelNum = gameState.level + 1;
@@ -200,8 +215,9 @@ export const useGameState = (): GameFullState => {
             targetType: levelConfig.targetType,
             isBossLevel: levelConfig.isBoss,
         }));
-    }, [gameState.level]);
 
+        startTimeRef.current = 0;
+    }, [gameState.level]);
 
     const quitGame = useCallback(() => {
         setGameState(prev => ({
@@ -214,13 +230,12 @@ export const useGameState = (): GameFullState => {
         setThrowingKnives([]);
     }, []);
 
-
     const resetGame = () => {
         console.log('resetGame with accountAddress', gameState.playerAddress)
         startGame(gameState.playerAddress)
     };
 
-
+    // Animation de lancer de couteau optimisée
     const throwKnife = useCallback(() => {
         if (gameState.knivesRemaining <= 0 || gameState.gameStatus !== 'playing') {
             return;
@@ -236,21 +251,18 @@ export const useGameState = (): GameFullState => {
             isThrown: true,
         };
 
-        // Add knife to throwing knives list
         setThrowingKnives(prev => [...prev, newKnife]);
-
-        // Immediately decrease knives remaining
         setGameState(prev => ({
             ...prev,
             knivesRemaining: prev.knivesRemaining - 1,
         }));
 
-        // Animate knife throw
+        // Animation plus fluide avec duration réduite
         const duration = 50; // ms
-        const startTime = Date.now();
+        const startTime = performance.now();
 
-        const animate = () => {
-            const elapsed = Date.now() - startTime;
+        const animate = (currentTime: number) => {
+            const elapsed = currentTime - startTime;
             const progress = Math.min(elapsed / duration, 1);
 
             setThrowingKnives(prev =>
@@ -261,19 +273,12 @@ export const useGameState = (): GameFullState => {
 
             if (progress < 1) {
                 requestAnimationFrame(animate);
-
             } else {
-                // Knife has reached target
-                // Calculate everything at the exact moment of impact
-
+                // Impact - calcul simplifié de l'angle
                 setGameState(prev => {
-                    const currentTargetRotation = 360 - prev.targetRotation;
-                    // Calculate the impact angle relative to the current target rotation
-                    //const impactAngle = (360 - currentTargetRotation) % 360; // OK ?
-                    const impactAngle = (180 + currentTargetRotation) % 360;
-                    //const impactAngle = (360 + currentTargetRotation) % 360;
+                    const impactAngle = (180 + 360 - prev.targetRotation) % 360;
 
-                    // Check collision with existing knives at impact moment
+                    // Check collision
                     if (checkKnifeCollision(impactAngle, prev.plantedKnives)) {
                         const newState: GameState = { ...prev, gameStatus: 'pause' };
 
@@ -281,26 +286,16 @@ export const useGameState = (): GameFullState => {
                             setGameState(prev => ({ ...prev, gameStatus: 'gameOver' }))
                         }, 500)
 
-                        // TODO: animation couteau qui rebondit
-
                         if (prev.score > prev.bestScore) newState.bestScore = newState.score;
                         if (prev.level > prev.bestLevel) newState.bestLevel = newState.level;
 
                         return newState;
                     }
 
-                    // Check apple collision at impact moment
+                    // Check apple collision
                     const impactHitApple = checkAppleCollision(impactAngle, prev.apples);
 
-                    if (impactHitApple) {
-                        // TODO: animation pomme qui explose en 2
-
-                    } else {
-                        // TODO: animation particules
-                    }
-
                     setThrowingKnives(prev => prev.filter(knife => knife.id !== newKnife.id));
-
 
                     const newPlantedKnife: PlantedKnife = {
                         id: newKnife.id,
@@ -319,15 +314,8 @@ export const useGameState = (): GameFullState => {
                             : prev.apples,
                     };
 
-                    //console.log(`currentAngle:`, gameState.targetRotation)
-                    //console.log(`impactAngle:`, impactAngle)
-                    //console.log(`newPlantedKnife:`, newPlantedKnife)
-
-                    // Check if level is complete
+                    // Check level complete
                     if (newState.knivesRemaining <= 0) {
-
-                        // TODO animation cible qui explose
-
                         setTimeout(() => {
                             setGameState(prev => ({ ...prev, gameStatus: 'levelComplete' }))
                         }, 300)
@@ -337,17 +325,11 @@ export const useGameState = (): GameFullState => {
 
                     return newState;
                 });
-
-                // Remove knife from throwing knives
-                //setThrowingKnives(prev => prev.filter(knife => knife.id !== newKnife.id));
-
-                //pauseGame(); // DEBUG
             }
         };
 
         requestAnimationFrame(animate);
     }, [gameState.knivesRemaining, gameState.gameStatus, gameState.targetRotation, gameState.plantedKnives, gameState.apples]);
-
 
     return {
         authenticated,
@@ -375,4 +357,3 @@ export const useGameState = (): GameFullState => {
         handleCreateWallet,
     };
 };
-

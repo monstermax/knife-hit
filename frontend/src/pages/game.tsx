@@ -15,29 +15,34 @@ export const GamePage: FC<{ gameFullState: GameFullState }> = ({ gameFullState }
             {/* Particules d'arrière-plan */}
             <div className="game-background-particles"></div>
 
-            {/* Gradient overlay pour plus de profondeur */}
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/5 to-black/10 pointer-events-none"></div>
+            {/* Cadre principal du jeu */}
+            <div className="game-frame">
+                {/* Header avec UI */}
+                <div className="game-header">
+                    <GameUI gameState={gameState} onQuitGame={quitGame} />
+                </div>
 
-            <GameUI gameState={gameState} onQuitGame={quitGame} />
+                {/* Zone de jeu principale */}
+                <div className="game-play-area">
+                    {(gameState.gameStatus === 'playing' || gameState.gameStatus === 'pause') && (
+                        <GameCanvas
+                            gameState={gameState}
+                            throwingKnives={throwingKnives}
+                            onThrowKnife={throwKnife}
+                        />
+                    )}
 
-            {(gameState.gameStatus === 'playing' || 1) && (
-                <GameCanvas
-                    gameState={gameState}
-                    throwingKnives={throwingKnives}
-                    onThrowKnife={throwKnife}
-                />
-            )}
-
-            <GameOverlay
-                gameState={gameState}
-                onStartGame={startGame}
-                onNextLevel={nextLevel}
-                onResetGame={resetGame}
-                pauseGame={pauseGame}
-                unpauseGame={unpauseGame}
-                onBackHome={quitGame}
-            />
+                    <GameOverlay
+                        gameState={gameState}
+                        onStartGame={startGame}
+                        onNextLevel={nextLevel}
+                        onResetGame={resetGame}
+                        pauseGame={pauseGame}
+                        unpauseGame={unpauseGame}
+                        onBackHome={quitGame}
+                    />
+                </div>
+            </div>
         </div>
     );
 }
-

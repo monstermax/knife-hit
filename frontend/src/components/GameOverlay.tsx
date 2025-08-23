@@ -51,19 +51,30 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
     if (gameState.gameStatus === 'home') {
         return (
             <div className="game-over-overlay">
-                <h1 className="text-4xl font-bold mb-8 text-white">Knife Hit</h1>
-                <p className="text-lg mb-8 text-center max-w-md">
-                    Throw knives at the rotating target. Avoid hitting other knives!
-                    Collect apples for bonus points.
-                </p>
-                <button
-                    className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg text-xl transition-colors"
-                    onClick={onStartGame}
-                >
-                    Start Game
-                </button>
-                <div className="mt-4 text-sm text-gray-300">
-                    Apples collected: {gameState.totalApples}
+                <div className="backdrop-blur-md bg-black/40 p-8 rounded-3xl border border-white/20 shadow-2xl max-w-md mx-auto">
+                    <div className="text-center space-y-6">
+                        <h1 className="text-5xl font-bold text-white drop-shadow-lg">🔪 Knife Hit</h1>
+                        <p className="text-lg text-gray-200 leading-relaxed">
+                            Throw knives at the rotating target.<br />
+                            Avoid hitting other knives!<br />
+                            Collect apples for bonus points.
+                        </p>
+
+                        <button
+                            className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold py-4 px-8 rounded-2xl text-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                            onClick={onStartGame}
+                        >
+                            ▶️ Start Game
+                        </button>
+
+                        {gameState.totalApples > 0 && (
+                            <div className="bg-amber-500/20 backdrop-blur-sm px-4 py-2 rounded-full border border-amber-400/30">
+                                <div className="text-amber-200 font-medium">
+                                    🍎 Apples collected: {gameState.totalApples}
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         );
@@ -72,56 +83,59 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
     if (gameState.gameStatus === 'gameOver') {
         return (
             <div className="game-over-overlay select-none">
-                <div className="bg-black/80 backdrop-blur-sm p-6 rounded-2xl border border-red-400/30 shadow-2xl max-w-lg mx-auto">
-                    {/* Game Over Title - Compact */}
-                    <div className="text-center mb-4">
-                        <div className="flex items-center justify-center gap-3 mb-3">
-                            <span className="text-4xl">💀</span>
-                            <h2 className="text-3xl font-bold text-red-400">Game Over!</h2>
-                        </div>
-                    </div>
+                <div className="backdrop-blur-md bg-gradient-to-br from-red-900/80 to-red-800/60 p-8 rounded-3xl border border-red-400/40 shadow-2xl max-w-lg mx-auto">
 
-                    {/* Stats en une seule ligne */}
-                    <div className="bg-gray-800/30 p-4 rounded-xl mb-4">
-                        <div className="grid grid-cols-5 gap-4 text-center">
-                            <div>
-                                <div className="text-2xl font-bold text-white">{gameState.level}</div>
-                                <div className="text-xs text-gray-300">Level</div>
-                            </div>
-                            <div>
-                                <div className="text-2xl font-bold text-white">{gameState.score}</div>
-                                <div className="text-xs text-gray-300">Score</div>
-                            </div>
-                            <div>
-                                <div className="text-xl font-bold text-green-400">{gameState.totalApples} 🍎</div>
-                                <div className="text-xs text-gray-400">Apples</div>
-                            </div>
-                            <div>
-                                <div className="text-xl font-bold text-purple-300">{gameState.bestLevel}</div>
-                                <div className="text-xs text-purple-300">Best Lv</div>
-                            </div>
-                            <div>
-                                <div className="text-xl font-bold text-purple-300">{gameState.bestScore}</div>
-                                <div className="text-xs text-purple-300">Best Sc</div>
-                            </div>
-                        </div>
+                    {/* Header */}
+                    <div className="text-center mb-6">
+                        <div className="text-6xl mb-3">💀</div>
+                        <h2 className="text-4xl font-bold text-red-300 drop-shadow-lg">Game Over!</h2>
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="flex gap-3">
+                    <div className="space-y-3">
                         <button
-                            onClick={onResetGame}
-                            className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-2 px-4 rounded-lg transition-all transform hover:scale-105"
+                            onClick={onBackHome}
+                            className="w-full bg-gradient-to-r from-gray-700 to-gray-800 hover:from-gray-600 hover:to-gray-700 text-white font-bold py-3 px-6 rounded-2xl transition-all duration-200 transform hover:scale-105 shadow-lg text-base cursor-pointer"
                         >
-                            🔄 Try Again
+                            🏠 Back to Home
                         </button>
 
                         <button
-                            onClick={onBackHome}
-                            className="flex-1 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-bold py-2 px-4 rounded-lg transition-all transform hover:scale-105"
+                            onClick={onResetGame}
+                            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl text-lg cursor-pointer"
                         >
-                            🏠 Home
+                            🔄 Try Again
                         </button>
+                    </div>
+
+                    {/* Stats Grid */}
+                    <div className="bg-black/30 backdrop-blur-sm p-6 rounded-2xl mt-6 border border-white/10">
+                        <div className="grid grid-cols-2 gap-6">
+                            <div className="text-center">
+                                <div className="text-3xl font-bold text-white mb-1">{gameState.level}</div>
+                                <div className="text-sm text-gray-300">Level Reached</div>
+                            </div>
+                            <div className="text-center">
+                                <div className="text-3xl font-bold text-yellow-400 mb-1">{gameState.score}</div>
+                                <div className="text-sm text-gray-300">Final Score</div>
+                            </div>
+                        </div>
+
+                        {/* Secondary stats */}
+                        <div className="grid grid-cols-3 gap-4 mt-4 pt-4 border-t border-white/10">
+                            <div className="text-center">
+                                <div className="text-lg font-bold text-green-400">{gameState.totalApples} 🍎</div>
+                                <div className="text-xs text-gray-400">Apples</div>
+                            </div>
+                            <div className="text-center">
+                                <div className="text-lg font-bold text-purple-300">{gameState.bestLevel}</div>
+                                <div className="text-xs text-purple-300">Best Lv</div>
+                            </div>
+                            <div className="text-center">
+                                <div className="text-lg font-bold text-purple-300">{gameState.bestScore}</div>
+                                <div className="text-xs text-purple-300">Best Score</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -132,34 +146,36 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
         return (
             <div className="level-complete-overlay select-none">
                 <div className="flex flex-col items-center justify-center">
-                    {/* Container avec fond et bordure */}
-                    <div className="bg-black/70 backdrop-blur-sm p-8 rounded-2xl border-2 border-green-400/50 shadow-2xl shadow-green-500/25 animate-pulse">
-                        {/* Icône dynamique selon le type de niveau */}
+                    <div className="backdrop-blur-md bg-gradient-to-br from-green-800/80 to-emerald-700/60 p-8 rounded-3xl border-2 border-green-400/60 shadow-2xl shadow-green-500/25 animate-pulse max-w-md mx-auto">
+
+                        {/* Icon */}
                         <div className="text-center text-8xl mb-4">
                             {gameState.isBossLevel ? '👑' : '✨'}
                         </div>
 
-                        {/* Titre principal - Grande taille pour impact visuel */}
-                        <h2 className="text-6xl font-bold text-center mb-4 bg-gradient-to-r from-green-400 via-emerald-400 to-green-500 bg-clip-text text-transparent drop-shadow-2xl">
+                        {/* Title */}
+                        <h2 className="text-5xl font-bold text-center mb-4 bg-gradient-to-r from-green-300 via-emerald-300 to-green-400 bg-clip-text text-transparent drop-shadow-2xl">
                             {gameState.isBossLevel ? 'BOSS' : 'LEVEL'}
                         </h2>
 
-                        {/* Sous-titre épuré */}
+                        {/* Subtitle */}
                         <div className="text-2xl font-semibold text-white text-center mb-6">
                             {gameState.isBossLevel ? 'DEFEATED!' : 'COMPLETE!'}
                         </div>
 
-                        {/* Informations essentielles en une ligne */}
-                        <div className="flex items-center justify-center gap-6 text-lg text-gray-200">
-                            <span className="font-bold">LV {gameState.level}</span>
-                            <span className="text-green-400">•</span>
-                            <span className="font-bold">{gameState.score} pts</span>
-                            {gameState.totalApples > 0 && (
-                                <>
-                                    <span className="text-green-400">•</span>
-                                    <span className="text-yellow-400">{gameState.totalApples} 🍎</span>
-                                </>
-                            )}
+                        {/* Stats */}
+                        <div className="bg-black/20 backdrop-blur-sm p-4 rounded-2xl">
+                            <div className="flex items-center justify-center gap-6 text-lg text-gray-200">
+                                <span className="font-bold text-white">LV {gameState.level}</span>
+                                <span className="text-green-400">•</span>
+                                <span className="font-bold text-yellow-300">{gameState.score} pts</span>
+                                {gameState.totalApples > 0 && (
+                                    <>
+                                        <span className="text-green-400">•</span>
+                                        <span className="text-amber-400">{gameState.totalApples} 🍎</span>
+                                    </>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -169,7 +185,6 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
 
     if (debug && (gameState.gameStatus === 'playing' || gameState.gameStatus === 'pause')) {
         // DEBUG
-
         const currentTargetRotation = 360 - gameState.targetRotation;
         const impactAngle = (180 + gameState.targetRotation) % 360;
 
@@ -198,4 +213,3 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
 
     return null;
 };
-
