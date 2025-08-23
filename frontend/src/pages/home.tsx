@@ -1,12 +1,10 @@
-import { FC, useEffect, useMemo, useState } from "react";
-import { CrossAppAccountWithMetadata, useConnectWallet, usePrivy } from '@privy-io/react-auth';
+import { FC } from "react";
 
 import { MonadGamesId } from "@/components/MonadGamesId";
 import { Button } from '@/components/ui/button'
+import { getGame, getPlayerDataPerGame, registerGame, updatePlayerData } from "@/utils/backend_api";
 
 import type { GameFullState } from "@/types/game";
-import { getGame, getPlayerDataPerGame, registerGame, updatePlayerData } from "@/utils/backend_api";
-import { getUserAddress } from "@/utils/gameUtils";
 
 
 const debug = false;

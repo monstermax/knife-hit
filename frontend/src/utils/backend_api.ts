@@ -10,7 +10,7 @@ export const registerGame = (): Promise<any> => {
     const data = {
         name: 'Knife Hit',
         image: '🔪',
-        url: 'http://localhost:5685/',
+        url: 'https://knife.karmas.fr/',
     };
 
     const url = apiUrl;

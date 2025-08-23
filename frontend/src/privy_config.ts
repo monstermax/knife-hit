@@ -15,13 +15,13 @@ const monadConfig = {
     },
     rpcUrls: {
         "default": {
-            "http": ["https://testnet1.monad.xyz"]
+            "http": ["https://rpc-testnet.monad.xyz"]
         }
     },
     blockExplorers: {
         "default": {
             "name": "Monad Explorer",
-            "url": "https://explorer-testnet.monad.xyz"
+            "url": "https://testnet.monadexplorer.com"
         }
     },
     testnet: true,
