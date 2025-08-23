@@ -26,6 +26,7 @@ export const generateLevelConfig = (level: number): LevelConfig => {
             rotationSpeed: Math.min(3 + level * 0.1, 3),
             targetType: 'lemon',
             isBoss: true,
+            cycle: { duration: 5000, min: 0.5, max: 2 + level * 0.1, clockwise: true },
         };
     }
 
@@ -36,7 +37,11 @@ export const generateLevelConfig = (level: number): LevelConfig => {
         rotationSpeed: Math.min(20 + level * 0.05, 2),
         targetType: 'wood',
         isBoss: false,
+        cycle: { duration: 5000, min: 0.5, max: 1.5 + level * 0.1, clockwise: true },
     };
+
+    // TODO: "cycles" a implémenter
+    // toutes un cycle dure ${duration} milliseconds, pendant lequel la vitesse de rotation va evoluer de ${min} à ${max} ou de ${max} à ${min}
 };
 
 
@@ -161,4 +166,63 @@ export const getUserAddress = (user: User | null) => {
 
     return null;
 }
+
+
+export const calculateCycleMultiplier = (
+    gameStartTime: number,
+    currentTime: number,
+    cycle: { duration: number; min: number; max: number; clockwise: boolean }
+): { multiplier: number; cycleInfo: { cycleNumber: number; progress: number } } => {
+    const totalElapsed = currentTime - gameStartTime;
+    const cycleNumber = Math.floor(totalElapsed / cycle.duration);
+    const elapsed = totalElapsed % cycle.duration;
+    const progress = elapsed / cycle.duration; // 0 à 1
+
+    // Générer une valeur "aléatoire" mais reproductible basée sur le numéro de cycle
+    const generateTargetValue = (cycleNum: number): number => {
+        // Utiliser le numéro de cycle pour générer une valeur reproductible
+        const seed = (cycleNum * 9301 + 49297) % 233280;
+        const random = seed / 233280;
+        return cycle.min + (cycle.max - cycle.min) * random;
+    };
+
+    if (cycleNumber === 0) {
+        // Premier cycle : progression normale de min vers max
+        const range = cycle.max - cycle.min;
+        const multiplier = cycle.min + (range * progress);
+        return {
+            multiplier,
+            cycleInfo: { cycleNumber, progress }
+        };
+    }
+
+    // Cycles suivants : continuité assurée
+    const previousTarget = generateTargetValue(cycleNumber - 1);
+    const currentTarget = generateTargetValue(cycleNumber);
+
+    let startValue, endValue;
+
+    if (currentTarget > previousTarget) {
+        // La nouvelle cible est plus haute : on monte
+        startValue = previousTarget;
+        endValue = currentTarget;
+    } else {
+        // La nouvelle cible est plus basse : on descend
+        startValue = currentTarget;
+        endValue = previousTarget;
+        // Inverser la progression pour descendre
+        const invertedProgress = 1 - progress;
+        const multiplier = startValue + (endValue - startValue) * invertedProgress;
+        return {
+            multiplier,
+            cycleInfo: { cycleNumber, progress }
+        };
+    }
+
+    const multiplier = startValue + (endValue - startValue) * progress;
+    return {
+        multiplier,
+        cycleInfo: { cycleNumber, progress }
+    };
+};
 

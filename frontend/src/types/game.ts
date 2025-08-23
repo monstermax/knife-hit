@@ -71,6 +71,12 @@ export interface LevelConfig {
     rotationSpeed: number;
     targetType: 'wood' | 'lemon';
     isBoss: boolean;
+    cycle: {
+        duration: number;  // durée du cycle en ms
+        min: number;       // facteur multiplicateur minimum
+        max: number;       // facteur multiplicateur maximum  
+        clockwise: boolean; // direction (pour usage futur)
+    };
 }
 
 export interface ThrowingKnife {

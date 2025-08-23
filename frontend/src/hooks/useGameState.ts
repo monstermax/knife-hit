@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 
 import { GameState, ThrowingKnife, PlantedKnife, AppleItem, PrivyUser, GameFullState } from '../types/game';
-import { generateLevelConfig, generatePreKnives, generateApples, checkKnifeCollision, checkAppleCollision, calculateScore, GAME_CONFIG, getUserAddress } from '../utils/gameUtils';
+import { generateLevelConfig, generatePreKnives, generateApples, checkKnifeCollision, checkAppleCollision, calculateScore, GAME_CONFIG, getUserAddress, calculateCycleMultiplier } from '../utils/gameUtils';
 import { CrossAppAccountWithMetadata, useConnectWallet, usePrivy } from '@privy-io/react-auth';
 
 
@@ -49,6 +49,7 @@ export const useGameState = (): GameFullState => {
     // Refs pour l'animation optimisée
     const animationRef = useRef<number | undefined>(undefined);
     const startTimeRef = useRef<number>(0);
+    const levelStartTimeRef = useRef<number>(0);
 
     // Save apples/bestscore/bestlevel to localStorage whenever it changes
     useEffect(() => {
@@ -63,7 +64,7 @@ export const useGameState = (): GameFullState => {
         localStorage.setItem('knife-hit-bestlevel', gameState.bestLevel.toString());
     }, [gameState.bestLevel]);
 
-    // Animation de rotation optimisée avec requestAnimationFrame
+    // Animation de rotation avec cycle
     useEffect(() => {
         if (gameState.gameStatus !== 'playing') {
             if (animationRef.current) {
@@ -77,13 +78,36 @@ export const useGameState = (): GameFullState => {
             if (!startTimeRef.current) {
                 startTimeRef.current = timestamp;
             }
+            if (!levelStartTimeRef.current) {
+                levelStartTimeRef.current = timestamp;
+            }
 
-            const deltaTime = (timestamp - startTimeRef.current) / 1000; // Convert to seconds
+            const deltaTime = (timestamp - startTimeRef.current) / 1000;
 
-            setGameState(prev => ({
-                ...prev,
-                targetRotation: (prev.targetRotation + prev.rotationSpeed * deltaTime * 50) % 360,
-            }));
+            setGameState(prev => {
+                // Récupérer la config du niveau actuel
+                const levelConfig = generateLevelConfig(prev.level);
+
+                // Calculer le multiplicateur cyclique avec continuité
+                const { multiplier: cycleMultiplier, cycleInfo } = calculateCycleMultiplier(
+                    levelStartTimeRef.current,
+                    timestamp,
+                    levelConfig.cycle
+                );
+
+                // Debug optionnel
+                if (process.env.NODE_ENV === 'development') {
+                    console.log(`Cycle ${cycleInfo.cycleNumber}, Progress: ${cycleInfo.progress.toFixed(2)}, Multiplier: ${cycleMultiplier.toFixed(2)}`);
+                }
+
+                // Appliquer la rotation avec le cycle
+                const rotationDelta = prev.rotationSpeed * deltaTime * 50 * cycleMultiplier;
+
+                return {
+                    ...prev,
+                    targetRotation: (prev.targetRotation + rotationDelta) % 360,
+                };
+            });
 
             startTimeRef.current = timestamp;
             animationRef.current = requestAnimationFrame(animate);
@@ -98,7 +122,8 @@ export const useGameState = (): GameFullState => {
             }
             startTimeRef.current = 0;
         };
-    }, [gameState.gameStatus, gameState.rotationSpeed]);
+    }, [gameState.gameStatus, gameState.rotationSpeed, gameState.level]);
+
 
     useEffect(() => {
         setAccountAddress(null);
@@ -180,6 +205,7 @@ export const useGameState = (): GameFullState => {
 
         setThrowingKnives([]);
         startTimeRef.current = 0;
+        levelStartTimeRef.current = 0;
     };
 
     const pauseGame = useCallback(() => {
@@ -217,6 +243,7 @@ export const useGameState = (): GameFullState => {
         }));
 
         startTimeRef.current = 0;
+        levelStartTimeRef.current = 0;
     }, [gameState.level]);
 
     const quitGame = useCallback(() => {
