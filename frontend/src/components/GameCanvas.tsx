@@ -34,6 +34,7 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({
         if (gameState.level % 5 === 3) return KnifePoignard;
         if (gameState.level % 5 === 4) return KnifeMonad;
         if (gameState.level % 5 === 0) return KnifeDagger;
+        return KnifeBase;
     }, [gameState.level]);
 
     const TargetComponent = useMemo(() => {
