@@ -24,8 +24,8 @@ export const TargetGold: React.FC<TargetGoldProps> = ({
                 cx={center}
                 cy={center}
                 r={radius}
-                fill="url(#goldRing)"
-                stroke="#FFD700"
+                fill="url(#monadRing)"
+                stroke="#9945FF"
                 strokeWidth="5"
             />
             {/* Anneau intérieur */}
@@ -33,17 +33,17 @@ export const TargetGold: React.FC<TargetGoldProps> = ({
                 cx={center}
                 cy={center}
                 r={radius * 0.8}
-                fill="url(#goldInner)"
-                stroke="#FFFACD"
+                fill="url(#monadInner)"
+                stroke="#2D1A4A"
                 strokeWidth="3"
             />
-            {/* Anneau blanc */}
+            {/* Anneau rose/violet */}
             <circle
                 cx={center}
                 cy={center}
                 r={radius * 0.6}
                 fill="none"
-                stroke="#fff"
+                stroke="#FF6EFF"
                 strokeWidth="5"
                 opacity="0.7"
             />
@@ -62,7 +62,7 @@ export const TargetGold: React.FC<TargetGoldProps> = ({
                 cy={center + radius * 0.45}
                 rx={radius * 0.09}
                 ry={radius * 0.03}
-                fill="#fff"
+                fill="#FF6EFF"
                 opacity="0.5"
                 transform={`rotate(15,${center - radius * 0.25},${center + radius * 0.45})`}
             />
@@ -71,8 +71,8 @@ export const TargetGold: React.FC<TargetGoldProps> = ({
                 cx={center}
                 cy={center}
                 r={radius * 0.18}
-                fill="url(#goldCore)"
-                stroke="#FFD700"
+                fill="url(#monadCore)"
+                stroke="#9945FF"
                 strokeWidth="2"
                 opacity="0.95"
             />
@@ -96,18 +96,18 @@ export const TargetGold: React.FC<TargetGoldProps> = ({
             </foreignObject>
 
             <defs>
-                <radialGradient id="goldRing" cx="50%" cy="50%" r="80%">
-                    <stop offset="0%" stopColor="#FFFACD" />
-                    <stop offset="60%" stopColor="#FFD700" />
-                    <stop offset="100%" stopColor="#B8860B" />
+                <radialGradient id="monadRing" cx="50%" cy="50%" r="80%">
+                    <stop offset="0%" stopColor="#9945FF" />
+                    <stop offset="60%" stopColor="#FF6EFF" />
+                    <stop offset="100%" stopColor="#2D1A4A" />
                 </radialGradient>
-                <radialGradient id="goldInner" cx="50%" cy="50%" r="80%">
+                <radialGradient id="monadInner" cx="50%" cy="50%" r="80%">
                     <stop offset="0%" stopColor="#fff" />
-                    <stop offset="100%" stopColor="#FFD700" />
+                    <stop offset="100%" stopColor="#9945FF" />
                 </radialGradient>
-                <radialGradient id="goldCore" cx="50%" cy="50%" r="80%">
+                <radialGradient id="monadCore" cx="50%" cy="50%" r="80%">
                     <stop offset="0%" stopColor="#fff" />
-                    <stop offset="100%" stopColor="#FFD700" />
+                    <stop offset="100%" stopColor="#FF6EFF" />
                 </radialGradient>
             </defs>
         </svg>

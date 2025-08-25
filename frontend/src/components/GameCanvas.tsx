@@ -40,9 +40,9 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({
         if (gameState.level % 5 === 1) return WoodTarget;
         if (gameState.level % 5 === 2) return TargetCheese;
         if (gameState.level % 5 === 3) return TargetWatermelon;
-        if (gameState.level % 5 === 4) return TargetGold;
+        if (gameState.level % 5 === 4) return LemonTarget;
         if (gameState.level % 5 === 0 && gameState.level > 5) return TargetCrystal;
-        if (gameState.level % 5 === 0) return LemonTarget;
+        if (gameState.level % 5 === 0) return TargetGold;
         return WoodTarget;
     }, [gameState.level])
 
