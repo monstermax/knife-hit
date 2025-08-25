@@ -58,36 +58,44 @@ export const HomePage: FC<{ gameFullState: GameFullState }> = ({ gameFullState }
 
                 {/* Game buttons */}
                 <div className="space-y-4">
-                    <button
-                        onClick={playAsGuest}
-                        className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold py-4 px-8 rounded-xl text-xl transition-all transform hover:scale-105 shadow-lg cursor-pointer"
-                    >
-                        🎮 Play as Guest
-                    </button>
 
-                    {!authenticated && (
-                        <>
+                    <div className="grid grid-cols-2 gap-6">
+                        <div>
+                            <img src="/images/pepe.gif" style={{ height: '150px' }} />
+                        </div>
+                        <div className="space-y-4">
                             <button
-                                onClick={connectAndPlay}
-                                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-xl text-xl transition-all transform hover:scale-105 shadow-lg cursor-pointer"
-                                disabled={!ready}
+                                onClick={playAsGuest}
+                                className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold py-4 px-8 rounded-xl text-xl transition-all transform hover:scale-105 shadow-lg cursor-pointer"
                             >
-                                {!ready ? "Loading..." : "🚀 Connect"}
+                                🎮 Play as Guest
                             </button>
-                        </>
-                    )}
 
-                    {authenticated && (
-                        <>
-                            <button
-                                onClick={connectAndPlay}
-                                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-xl text-xl transition-all transform hover:scale-105 shadow-lg cursor-pointer"
-                                disabled={!ready || !accountAddress}
-                            >
-                                {(!ready || !accountAddress) ? "Loading..." : "🚀 Play Connected"}
-                            </button>
-                        </>
-                    )}
+                            {!authenticated && (
+                                <>
+                                    <button
+                                        onClick={connectAndPlay}
+                                        className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-xl text-xl transition-all transform hover:scale-105 shadow-lg cursor-pointer"
+                                        disabled={!ready}
+                                    >
+                                        {!ready ? "Loading..." : "🚀 Connect"}
+                                    </button>
+                                </>
+                            )}
+
+                            {authenticated && (
+                                <>
+                                    <button
+                                        onClick={connectAndPlay}
+                                        className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-xl text-xl transition-all transform hover:scale-105 shadow-lg cursor-pointer"
+                                        disabled={!ready || !accountAddress}
+                                    >
+                                        {(!ready || !accountAddress) ? "Loading..." : "🚀 Play Connected"}
+                                    </button>
+                                </>
+                            )}
+                        </div>
+                    </div>
                 </div>
 
                 {/* Connected status */}
