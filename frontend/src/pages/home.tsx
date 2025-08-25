@@ -1,4 +1,4 @@
-import { FC, useState, useEffect, useCallback } from "react";
+import { FC, useState, useEffect, useRef } from "react";
 
 import { MonadGamesId } from "@/components/MonadGamesId";
 import { Button } from '@/components/ui/button'
@@ -15,8 +15,9 @@ export const HomePage: FC<{ gameFullState: GameFullState }> = ({ gameFullState }
 
     // État pour la position et direction de la mouche
     const [flyPosition, setFlyPosition] = useState({ x: 100, y: 100 });
-    const [flyDirection, setFlyDirection] = useState<'left' | 'right'>('right');
+    const [shouldFlip, setShouldFlip] = useState(false);
     const [flyDuration, setFlyDuration] = useState<number>(3000);
+    const previousPosition = useRef({ x: 100, y: 100 });
 
     const playAsGuest = () => {
         startGame();
@@ -37,11 +38,16 @@ export const HomePage: FC<{ gameFullState: GameFullState }> = ({ gameFullState }
         const newX = Math.random() * (window.innerWidth - 200) + 50; // Évite les bords
         const newY = Math.random() * (window.innerHeight - 300) + 50; // Évite le bas où sont les boutons
 
-        // Détermine la direction basée sur le mouvement horizontal
-        const direction = newX > flyPosition.x ? 'right' : 'left';
-        setFlyDirection(direction);
+        // Calcule la vitesse horizontale basée sur la position précédente
+        const horizontalVelocity = newX - previousPosition.current.x;
+        // Applique le miroir seulement si la vitesse horizontale est > 0
+        setShouldFlip(horizontalVelocity > 0);
+        
+        console.log('horizontalVelocity:', horizontalVelocity, '=> From', { x: Math.round(previousPosition.current.x), y: Math.round(previousPosition.current.y) }, '=> Go to ', { x: Math.round(newX), y: Math.round(newY) })
+        
+        // Met à jour la position précédente
+        previousPosition.current = { x: newX, y: newY };
         setFlyPosition({ x: newX, y: newY });
-        console.log('direction:', direction, '=> From', { x: Math.round(flyPosition.x), y: Math.round(flyPosition.y) }, '=> Go to ', { x: Math.round(newX), y: Math.round(newY) })
     }
 
 
@@ -77,7 +83,7 @@ export const HomePage: FC<{ gameFullState: GameFullState }> = ({ gameFullState }
                     height: '50px',
                     left: `${flyPosition.x}px`,
                     top: `${flyPosition.y}px`,
-                    transform: `translate(-50%, -50%) ${flyDirection === 'right' ? 'scaleX(-1)' : 'scaleX(1)'}`
+                    transform: `translate(-50%, -50%) ${shouldFlip ? 'scaleX(-1)' : 'scaleX(1)'}`
                 }}
             />
             <div className="max-w-md w-full text-center space-y-8">
