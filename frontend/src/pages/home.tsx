@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState, useEffect, useCallback } from "react";
 
 import { MonadGamesId } from "@/components/MonadGamesId";
 import { Button } from '@/components/ui/button'
@@ -12,6 +12,11 @@ const debug = false;
 
 export const HomePage: FC<{ gameFullState: GameFullState }> = ({ gameFullState }) => {
     const { ready, authenticated, accountAddress, login, startGame } = gameFullState;
+
+    // État pour la position et direction de la mouche
+    const [flyPosition, setFlyPosition] = useState({ x: 100, y: 100 });
+    const [flyDirection, setFlyDirection] = useState<'left' | 'right'>('right');
+    const [flyDuration, setFlyDuration] = useState<number>(3000);
 
     const playAsGuest = () => {
         startGame();
@@ -27,8 +32,54 @@ export const HomePage: FC<{ gameFullState: GameFullState }> = ({ gameFullState }
     };
 
 
+    const moveFly = () => {
+        // Génère des positions aléatoirement dans une zone réduite pour éviter les boutons
+        const newX = Math.random() * (window.innerWidth - 200) + 50; // Évite les bords
+        const newY = Math.random() * (window.innerHeight - 300) + 50; // Évite le bas où sont les boutons
+
+        // Détermine la direction basée sur le mouvement horizontal
+        const direction = newX > flyPosition.x ? 'right' : 'left';
+        setFlyDirection(direction);
+        setFlyPosition({ x: newX, y: newY });
+        console.log('direction:', direction, '=> From', { x: Math.round(flyPosition.x), y: Math.round(flyPosition.y) }, '=> Go to ', { x: Math.round(newX), y: Math.round(newY) })
+    }
+
+
+
+    // Animation de la mouche
+    useEffect(() => {
+        let timer: null | NodeJS.Timeout = null;
+
+        const moveFlyLoop = () => {
+            moveFly();
+
+            timer = setTimeout(moveFlyLoop, 3000 + Math.random() * 3000);
+        }
+
+        moveFlyLoop();
+
+        return () => {
+            if (timer) {
+                clearTimeout(timer);
+            }
+        };
+    }, []);
+
+
     return (
-        <div className="home-container min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-8">
+        <div className="home-container min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-8 relative">
+            {/* Mouche volante */}
+            <img
+                src="/images/mouch.png"
+                alt="mouche"
+                className={`absolute pointer-events-none transition-all duration-[${flyDuration}ms] ease-in-out z-10`}
+                style={{
+                    height: '50px',
+                    left: `${flyPosition.x}px`,
+                    top: `${flyPosition.y}px`,
+                    transform: `translate(-50%, -50%) ${flyDirection === 'right' ? 'scaleX(-1)' : 'scaleX(1)'}`
+                }}
+            />
             <div className="max-w-md w-full text-center space-y-8">
                 {/* Title */}
                 <div className="space-y-4">
