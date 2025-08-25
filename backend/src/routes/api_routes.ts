@@ -201,7 +201,7 @@ apiRouter.get('/leaderboard', async (req: Request, res: Response) => {
 
             for (const entry of leaderboard.data) {
                 const userId = entry.userId;
-                entry.score = leaderboardScoresMap[userId].score;
+                entry.score = leaderboardScoresMap[userId]?.score ?? 0;
             }
         }
 
