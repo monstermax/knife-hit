@@ -106,7 +106,9 @@ export const HomePage: FC<{ gameFullState: GameFullState }> = ({ gameFullState }
                         🔪 Knife Hit
                     </h1>
                     <p className="text-gray-300 text-lg">
-                        Hit the target, collect apples, avoid the knives!
+                        Hit the target, avoid the knives.
+                        <br />
+                        <small>Pop JohnWRichKid as a bonus!</small>
                     </p>
 
                     {/* Personal Best - Affichage discret */}
