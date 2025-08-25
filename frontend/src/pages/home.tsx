@@ -73,7 +73,7 @@ export const HomePage: FC<{ gameFullState: GameFullState }> = ({ gameFullState }
 
 
     return (
-        <div className="home-container min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-8 relative">
+        <div className="home-container min-h-screen bg-gradient-to-br from-slate-900 via-purple-800 to-indigo-900 flex items-center justify-center p-8 relative">
             {/* Mouche volante */}
             <img
                 src="/images/mouch.png"
@@ -99,7 +99,7 @@ export const HomePage: FC<{ gameFullState: GameFullState }> = ({ gameFullState }
                     {/* Personal Best - Affichage discret */}
                     {(gameFullState.gameState.bestScore > 0 || gameFullState.gameState.bestLevel > 0) && (
                         <div className="text-center">
-                            <div className="inline-flex items-center gap-3 bg-black/20 backdrop-blur-sm px-4 py-2 rounded-full border border-purple-500/20">
+                            <div className="inline-flex items-center gap-3 bg-black/20 backdrop-blur-sm px-4 py-2 rounded-full border border-purple-400/30">
                                 <span className="text-purple-300 text-sm">🏆 Best:</span>
                                 <span className="text-white text-sm font-medium">
                                     Level {gameFullState.gameState.bestLevel}
@@ -123,7 +123,7 @@ export const HomePage: FC<{ gameFullState: GameFullState }> = ({ gameFullState }
                         <div className="space-y-4">
                             <button
                                 onClick={playAsGuest}
-                                className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold py-4 px-8 rounded-xl text-xl transition-all transform hover:scale-105 shadow-lg cursor-pointer"
+                                className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold py-4 px-8 rounded-xl text-xl transition-all transform hover:scale-105 shadow-lg cursor-pointer"
                             >
                                 🎮 Play as Guest
                             </button>
@@ -132,7 +132,7 @@ export const HomePage: FC<{ gameFullState: GameFullState }> = ({ gameFullState }
                                 <>
                                     <button
                                         onClick={connectAndPlay}
-                                        className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-xl text-xl transition-all transform hover:scale-105 shadow-lg cursor-pointer"
+                                        className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-xl text-xl transition-all transform hover:scale-105 shadow-lg cursor-pointer"
                                         disabled={!ready}
                                     >
                                         {!ready ? "Loading..." : "🚀 Connect"}
@@ -144,7 +144,7 @@ export const HomePage: FC<{ gameFullState: GameFullState }> = ({ gameFullState }
                                 <>
                                     <button
                                         onClick={connectAndPlay}
-                                        className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-xl text-xl transition-all transform hover:scale-105 shadow-lg cursor-pointer"
+                                        className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-xl text-xl transition-all transform hover:scale-105 shadow-lg cursor-pointer"
                                         disabled={!ready || !accountAddress}
                                     >
                                         {(!ready || !accountAddress) ? "Loading..." : "🚀 Play Connected"}
