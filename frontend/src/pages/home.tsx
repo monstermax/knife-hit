@@ -42,9 +42,9 @@ export const HomePage: FC<{ gameFullState: GameFullState }> = ({ gameFullState }
         const horizontalVelocity = newX - previousPosition.current.x;
         // Applique le miroir seulement si la vitesse horizontale est > 0
         setShouldFlip(horizontalVelocity > 0);
-        
-        console.log('horizontalVelocity:', horizontalVelocity, '=> From', { x: Math.round(previousPosition.current.x), y: Math.round(previousPosition.current.y) }, '=> Go to ', { x: Math.round(newX), y: Math.round(newY) })
-        
+
+        //console.log('horizontalVelocity:', horizontalVelocity, '=> From', { x: Math.round(previousPosition.current.x), y: Math.round(previousPosition.current.y) }, '=> Go to ', { x: Math.round(newX), y: Math.round(newY) })
+
         // Met à jour la position précédente
         previousPosition.current = { x: newX, y: newY };
         setFlyPosition({ x: newX, y: newY });
@@ -89,7 +89,7 @@ export const HomePage: FC<{ gameFullState: GameFullState }> = ({ gameFullState }
             <div className="max-w-md w-full text-center space-y-8">
                 {/* Title */}
                 <div className="space-y-4">
-                    <h1 className="text-5xl font-bold text-white mb-2">
+                    <h1 className="text-5xl font-bold text-purple-400 mb-2">
                         🔪 Knife Hit
                     </h1>
                     <p className="text-gray-300 text-lg">
