@@ -7,6 +7,10 @@ import type { GameState, ThrowingKnife } from '../types/game';
 import { KnifeMonad } from '@/components/svg/KnifeMonad';
 import { KnifeDagger } from '@/components/svg/KnifeDagger';
 import { KnifePoignard } from '@/components/svg/KnifePoignard';
+import { TargetGold } from '@/components/svg/TargetGold';
+import { TargetCrystal } from '@/components/svg/TargetCrystal';
+import { TargetWatermelon } from '@/components/svg/TargetWatermelon';
+import { TargetCheese } from '@/components/svg/TargetCheese';
 
 
 interface GameCanvasProps {
@@ -30,13 +34,20 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({
         if (gameState.level % 5 === 3) return KnifePoignard;
         if (gameState.level % 5 === 4) return KnifeMonad;
         if (gameState.level % 5 === 0) return KnifeDagger;
+    }, [gameState.level]);
 
+    const TargetComponent = useMemo(() => {
+        if (gameState.level % 5 === 1) return WoodTarget;
+        if (gameState.level % 5 === 2) return TargetCheese;
+        if (gameState.level % 5 === 3) return TargetWatermelon;
+        if (gameState.level % 5 === 4) return TargetGold;
+        if (gameState.level % 5 === 0 && gameState.level > 5) return TargetCrystal;
+        if (gameState.level % 5 === 0) return LemonTarget;
+        return WoodTarget;
     }, [gameState.level])
 
 
     const renderTarget = () => {
-        const TargetComponent = gameState.targetType === 'lemon' ? LemonTarget : WoodTarget;
-
         const markers = debug ? [0, 45, 90, 135, 180, 225, 270, 315].map((angle, id) => ({ id, angle })) : []
 
         return (
