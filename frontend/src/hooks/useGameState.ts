@@ -316,11 +316,19 @@ export const useGameState = (): GameFullState => {
                         if (prev.score > prev.bestScore) newState.bestScore = newState.score;
                         if (prev.level > prev.bestLevel) newState.bestLevel = newState.level;
 
+                        const sound = new Audio('/sounds/hit-armor-03-266300.mp3');
+                        sound.play();
+
                         return newState;
                     }
 
                     // Check apple collision
                     const impactHitApple = checkAppleCollision(impactAngle, prev.apples);
+
+                    if (impactHitApple) {
+                            const sound = new Audio('/sounds/hit-plant-02-266291.mp3');
+                            sound.play();
+                    }
 
                     setThrowingKnives(prev => prev.filter(knife => knife.id !== newKnife.id));
 
@@ -354,6 +362,9 @@ export const useGameState = (): GameFullState => {
                 });
             }
         };
+
+        const sound = new Audio('/sounds/hit-flesh-01-266311.mp3');
+        sound.play();
 
         requestAnimationFrame(animate);
     }, [gameState.knivesRemaining, gameState.gameStatus, gameState.targetRotation, gameState.plantedKnives, gameState.apples]);

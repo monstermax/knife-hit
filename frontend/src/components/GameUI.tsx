@@ -29,7 +29,7 @@ export const GameUI: React.FC<GameUIProps> = ({ gameState, onQuitGame }) => {
   };
 
   return (
-    <div className="game-ui">
+    <div className="game-ui select-none">
       {/* Score */}
       <div className="bg-black/25 backdrop-blur-sm px-4 py-2 rounded-xl border border-purple-400/30 shadow-lg">
         <div className="score-display flex items-center gap-2">
