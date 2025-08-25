@@ -51,9 +51,9 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
     if (gameState.gameStatus === 'home') {
         return (
             <div className="game-over-overlay">
-                <div className="backdrop-blur-md bg-black/40 p-8 rounded-3xl border border-white/20 shadow-2xl max-w-md mx-auto">
+                <div className="backdrop-blur-md bg-black/40 p-8 rounded-3xl border border-purple-500/20 shadow-2xl max-w-md mx-auto">
                     <div className="text-center space-y-6">
-                        <h1 className="text-5xl font-bold text-white drop-shadow-lg">🔪 Knife Hit</h1>
+                        <h1 className="text-5xl font-bold text-purple-400 drop-shadow-lg">🔪 Knife Hit</h1>
                         <p className="text-lg text-gray-200 leading-relaxed">
                             Throw knives at the rotating target.<br />
                             Avoid hitting other knives!<br />
@@ -61,15 +61,15 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
                         </p>
 
                         <button
-                            className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold py-4 px-8 rounded-2xl text-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                            className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold py-4 px-8 rounded-2xl text-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
                             onClick={onStartGame}
                         >
                             ▶️ Start Game
                         </button>
 
                         {gameState.totalApples > 0 && (
-                            <div className="bg-amber-500/20 backdrop-blur-sm px-4 py-2 rounded-full border border-amber-400/30">
-                                <div className="text-amber-200 font-medium">
+                            <div className="bg-purple-500/20 backdrop-blur-sm px-4 py-2 rounded-full border border-purple-400/30">
+                                <div className="text-purple-200 font-medium">
                                     🍎 Apples collected: {gameState.totalApples}
                                 </div>
                             </div>
@@ -95,14 +95,14 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
                     <div className="space-y-3">
                         <button
                             onClick={onBackHome}
-                            className="w-full bg-gradient-to-r from-gray-700 to-gray-800 hover:from-gray-600 hover:to-gray-700 text-white font-bold py-3 px-6 rounded-2xl transition-all duration-200 transform hover:scale-105 shadow-lg text-base cursor-pointer"
+                            className="w-full bg-gradient-to-r from-slate-700 to-slate-800 hover:from-slate-600 hover:to-slate-700 text-white font-bold py-3 px-6 rounded-2xl transition-all duration-200 transform hover:scale-105 shadow-lg text-base cursor-pointer"
                         >
                             🏠 Back to Home
                         </button>
 
                         <button
                             onClick={onResetGame}
-                            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl text-lg cursor-pointer"
+                            className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold py-4 px-6 rounded-2xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl text-lg cursor-pointer"
                         >
                             🔄 Try Again
                         </button>
@@ -116,7 +116,7 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
                                 <div className="text-sm text-gray-300">Level Reached</div>
                             </div>
                             <div className="text-center">
-                                <div className="text-3xl font-bold text-yellow-400 mb-1">{gameState.score}</div>
+                                <div className="text-3xl font-bold text-purple-400 mb-1">{gameState.score}</div>
                                 <div className="text-sm text-gray-300">Final Score</div>
                             </div>
                         </div>
@@ -124,7 +124,7 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
                         {/* Secondary stats */}
                         <div className="grid grid-cols-3 gap-4 mt-4 pt-4 border-t border-white/10">
                             <div className="text-center">
-                                <div className="text-lg font-bold text-green-400">{gameState.totalApples} 🍎</div>
+                                <div className="text-lg font-bold text-indigo-400">{gameState.totalApples} 🍎</div>
                                 <div className="text-xs text-gray-400">Apples</div>
                             </div>
                             <div className="text-center">
@@ -146,7 +146,7 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
         return (
             <div className="level-complete-overlay select-none">
                 <div className="flex flex-col items-center justify-center">
-                    <div className="backdrop-blur-md bg-gradient-to-br from-green-800/80 to-emerald-700/60 p-8 rounded-3xl border-2 border-green-400/60 shadow-2xl shadow-green-500/25 animate-pulse max-w-md mx-auto">
+                    <div className="backdrop-blur-md bg-gradient-to-br from-purple-800/80 to-indigo-700/60 p-8 rounded-3xl border-2 border-purple-400/60 shadow-2xl shadow-purple-500/25 animate-pulse max-w-md mx-auto">
 
                         {/* Icon */}
                         <div className="text-center text-8xl mb-4">
@@ -154,7 +154,7 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
                         </div>
 
                         {/* Title */}
-                        <h2 className="text-5xl font-bold text-center mb-4 bg-gradient-to-r from-green-300 via-emerald-300 to-green-400 bg-clip-text text-transparent drop-shadow-2xl">
+                        <h2 className="text-5xl font-bold text-center mb-4 bg-gradient-to-r from-purple-300 via-indigo-300 to-purple-400 bg-clip-text text-transparent drop-shadow-2xl">
                             {gameState.isBossLevel ? 'BOSS' : 'LEVEL'}
                         </h2>
 
@@ -167,12 +167,12 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
                         <div className="bg-black/20 backdrop-blur-sm p-4 rounded-2xl">
                             <div className="flex items-center justify-center gap-6 text-lg text-gray-200">
                                 <span className="font-bold text-white">LV {gameState.level}</span>
-                                <span className="text-green-400">•</span>
-                                <span className="font-bold text-yellow-300">{gameState.score} pts</span>
+                                <span className="text-purple-400">•</span>
+                                <span className="font-bold text-purple-300">{gameState.score} pts</span>
                                 {gameState.totalApples > 0 && (
                                     <>
-                                        <span className="text-green-400">•</span>
-                                        <span className="text-amber-400">{gameState.totalApples} 🍎</span>
+                                        <span className="text-purple-400">•</span>
+                                        <span className="text-indigo-400">{gameState.totalApples} 🍎</span>
                                     </>
                                 )}
                             </div>

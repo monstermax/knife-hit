@@ -31,25 +31,25 @@ export const GameUI: React.FC<GameUIProps> = ({ gameState, onQuitGame }) => {
   return (
     <div className="game-ui">
       {/* Score */}
-      <div className="bg-black/25 backdrop-blur-sm px-4 py-2 rounded-xl border border-yellow-400/30 shadow-lg">
+      <div className="bg-black/25 backdrop-blur-sm px-4 py-2 rounded-xl border border-purple-400/30 shadow-lg">
         <div className="score-display flex items-center gap-2">
-          <span className="text-yellow-400 text-lg">💰</span>
-          <span className="text-xl font-bold text-yellow-300 drop-shadow-lg">{gameState.score}</span>
+          <span className="text-purple-400 text-lg">💰</span>
+          <span className="text-xl font-bold text-purple-300 drop-shadow-lg">{gameState.score}</span>
         </div>
       </div>
 
       {/* Stage title */}
-      <div className="bg-black/25 backdrop-blur-sm px-4 py-2 rounded-xl border border-white/20 shadow-lg">
+      <div className="bg-black/25 backdrop-blur-sm px-4 py-2 rounded-xl border border-purple-500/20 shadow-lg">
         {renderStageTitle()}
       </div>
 
       {/* Section droite avec apple counter et bouton quit */}
       <div className="flex items-center gap-3">
         {/* Apple counter */}
-        <div className="bg-black/25 backdrop-blur-sm px-3 py-2 rounded-xl border border-green-400/30 shadow-lg">
+        <div className="bg-black/25 backdrop-blur-sm px-3 py-2 rounded-xl border border-indigo-400/30 shadow-lg">
           <div className="apple-display flex items-center gap-2">
             <Apple size={20} />
-            <span className="text-lg font-bold text-green-300 drop-shadow-lg">{gameState.totalApples}</span>
+            <span className="text-lg font-bold text-indigo-300 drop-shadow-lg">{gameState.totalApples}</span>
           </div>
         </div>
 
