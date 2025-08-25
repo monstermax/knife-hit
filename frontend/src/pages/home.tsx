@@ -60,7 +60,7 @@ export const HomePage: FC<{ gameFullState: GameFullState }> = ({ gameFullState }
                 <div className="space-y-4">
 
                     <div className="grid grid-cols-2 gap-6">
-                        <div>
+                        <div className="flex items-center justify-center">
                             <img src="/images/pepe.gif" style={{ height: '150px' }} />
                         </div>
                         <div className="space-y-4">
