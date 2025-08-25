@@ -1,5 +1,5 @@
 export { WoodTarget } from './WoodTarget';
-export { Knife } from './Knife';
+export { KnifeBase } from './KnifeBase';
 export { Apple } from './Apple';
 export { John } from './John';
 export { Mouch } from './Mouch';

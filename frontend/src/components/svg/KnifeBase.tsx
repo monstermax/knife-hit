@@ -7,7 +7,7 @@ interface KnifeProps {
 }
 
 
-export const Knife: React.FC<KnifeProps> = ({
+export const KnifeBase: React.FC<KnifeProps> = ({
     size = 60,
     className = ''
 }) => {

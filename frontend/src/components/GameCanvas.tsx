@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 
-import { WoodTarget, LemonTarget, Knife, Apple, John, Mouch } from './svg';
+import { WoodTarget, LemonTarget, KnifeBase, Apple, John, Mouch } from './svg';
 import { GAME_CONFIG } from '../utils/gameUtils';
 
 import type { GameState, ThrowingKnife } from '../types/game';
+import { KnifeMonad } from '@/components/svg/KnifeMonad';
+import { KnifeDagger } from '@/components/svg/KnifeDagger';
+import { KnifePoignard } from '@/components/svg/KnifePoignard';
 
 
 interface GameCanvasProps {
@@ -21,6 +24,16 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({
     throwingKnives,
     onThrowKnife
 }) => {
+    const KnifeCurrent = useMemo(() => {
+        if (gameState.level % 5 === 1) return KnifeBase;
+        if (gameState.level % 5 === 2) return KnifePoignard;
+        if (gameState.level % 5 === 3) return KnifePoignard;
+        if (gameState.level % 5 === 4) return KnifeMonad;
+        if (gameState.level % 5 === 0) return KnifeDagger;
+
+    }, [gameState.level])
+
+
     const renderTarget = () => {
         const TargetComponent = gameState.targetType === 'lemon' ? LemonTarget : WoodTarget;
 
@@ -120,7 +133,7 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({
                         borderTop: debug ? 'solid 1px red': '', // debug
                     }}
                 >
-                    <Knife size={150} />
+                    <KnifeCurrent size={150} />
                 </div>
             )
         });
@@ -144,7 +157,7 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({
                         zIndex: 5,
                     }}
                 >
-                    <Knife size={120} />
+                    <KnifeCurrent size={120} />
                 </div>
             );
         });
@@ -157,7 +170,7 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({
             <div
                 className="current-knife"
             >
-                <Knife size={120} />
+                <KnifeCurrent size={120} />
             </div>
         );
     };
