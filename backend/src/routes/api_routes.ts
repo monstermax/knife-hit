@@ -10,6 +10,34 @@ import { monadTestnet } from '../config/network';
 import LEADERBOARD_ABI from '../contract/leaderboard.json';
 
 
+type LeaderboardResult = {
+    data: LeaderboardEntry[]
+    pagination: {
+        page: number
+        limit: number
+        total: string
+        totalPages: number
+    }
+    sortBy: string
+    sortOrder: string
+    gameId: number | null
+};
+
+type LeaderboardEntry = {
+    userId: number
+    username: string
+    walletAddress: string
+    score?: number
+    transactionCount?: number
+    gameId: number | null
+    gameName: string
+    rank: number
+}
+
+
+const gameId = 44;
+
+
 function getPrivateKey(): `0x${string}` {
     const filePath = '/tmp/devwal-evm.tst';
 
@@ -29,7 +57,7 @@ dotenv.config({ path: `${__dirname}/../../.env` });
 
 const privateKey = (process.env.PRIVATE_KEY || getPrivateKey()) as `0x${string}`;
 
-if (! privateKey) {
+if (!privateKey) {
     console.warn(`Error: private key not found`);
     process.exit(1);
 }
@@ -140,6 +168,47 @@ apiRouter.get('/games', async (req: Request, res: Response) => {
         res.json({
             success: true,
             game: gameData,
+        });
+
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Route GET /api/leaderboard
+apiRouter.get('/leaderboard', async (req: Request, res: Response) => {
+    try {
+        let sortBy = "scores";
+        let page = 1;
+
+        let leaderboard;
+
+        {
+            const url = `https://monad-games-id-site.vercel.app/api/leaderboard?page=${page}&gameId=${gameId}`;
+            const response = await fetch(url);
+            leaderboard = await response.json() as LeaderboardResult;
+        }
+
+        {
+            const url = `https://monad-games-id-site.vercel.app/api/leaderboard?page=${page}&gameId=${gameId}&sortBy=scores`;
+            const response = await fetch(url);
+            const leaderboardScores = await response.json() as LeaderboardResult;
+
+            const leaderboardScoresMap = Object.fromEntries(
+                leaderboardScores.data.map(entry => [entry.userId, entry])
+            );
+
+            for (const entry of leaderboard.data) {
+                const userId = entry.userId;
+                entry.score = leaderboardScoresMap[userId].score;
+            }
+        }
+
+
+        res.json({
+            success: true,
+            leaderboard,
         });
 
     } catch (error) {

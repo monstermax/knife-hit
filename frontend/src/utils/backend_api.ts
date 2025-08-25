@@ -1,3 +1,4 @@
+import { LeaderboardEntry, LeaderboardResult } from "@/types/game";
 
 //const apiEndpoint = "http://localhost:5686";
 const apiEndpoint = "";
@@ -70,6 +71,19 @@ export const getPlayerDataPerGame = (accountAddress: string): Promise<any | null
             //console.log('player result:', result)
             return result;
         });
+}
+
+
+export async function getLeaderBoard(): Promise<LeaderboardEntry[]> {
+    const url = `${apiEndpoint}/api/leaderboard`;
+    const response = await fetch(url);
+    const result = await response.json() as { success: boolean, leaderboard?: LeaderboardResult, error?: string };
+
+    if (! result.leaderboard) {
+        return [];
+    }
+
+    return result.leaderboard.data;
 }
 
 

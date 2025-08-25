@@ -1,6 +1,7 @@
 import { FC, useState, useEffect, useRef } from "react";
 
 import { MonadGamesId } from "@/components/MonadGamesId";
+import { Leaderboard } from "@/components/Leaderboard";
 import { Button } from '@/components/ui/button'
 import { getGame, getPlayerDataPerGame, registerGame, updatePlayerData } from "@/utils/backend_api";
 
@@ -18,6 +19,9 @@ export const HomePage: FC<{ gameFullState: GameFullState }> = ({ gameFullState }
     const [shouldFlip, setShouldFlip] = useState(false);
     const [flyDuration, setFlyDuration] = useState<number>(3000);
     const previousPosition = useRef({ x: 100, y: 100 });
+
+    // État pour le modal leaderboard
+    const [showLeaderboard, setShowLeaderboard] = useState(false);
 
     const playAsGuest = () => {
         startGame();
@@ -86,6 +90,15 @@ export const HomePage: FC<{ gameFullState: GameFullState }> = ({ gameFullState }
                     transform: `translate(-50%, -50%) ${shouldFlip ? 'scaleX(-1)' : 'scaleX(1)'}`
                 }}
             />
+
+            {/* Bouton Leaderboard discret */}
+            <button
+                onClick={() => setShowLeaderboard(true)}
+                className="absolute top-4 right-4 bg-black/20 backdrop-blur-sm hover:bg-purple-500/20 transition-all duration-200 px-3 py-2 rounded-xl border border-purple-500/20 hover:border-purple-400/30 text-purple-300 hover:text-purple-200 text-sm font-medium"
+            >
+                🏆 Leaderboard
+            </button>
+
             <div className="max-w-md w-full text-center space-y-8">
                 {/* Title */}
                 <div className="space-y-4">
@@ -152,9 +165,15 @@ export const HomePage: FC<{ gameFullState: GameFullState }> = ({ gameFullState }
                                 </>
                             )}
                         </div>
-                    </div>
-                </div>
 
+                    </div>
+
+                    {/* Modal Leaderboard */}
+                    <Leaderboard
+                        isOpen={showLeaderboard}
+                        onClose={() => setShowLeaderboard(false)}
+                    />
+                </div>
                 {/* Connected status */}
                 {authenticated && (
                     <div className="space-y-4">

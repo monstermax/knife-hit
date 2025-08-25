@@ -86,3 +86,29 @@ export interface ThrowingKnife {
     isThrown: boolean;
 }
 
+
+export type LeaderboardResult = {
+    data: LeaderboardEntry[];
+    pagination: {
+        page: number
+        limit: number
+        total: string
+        totalPages: number
+    }
+    sortBy: string
+    sortOrder: string
+    gameId: any
+};
+
+
+export type LeaderboardEntry = {
+    userId: number
+    username: string
+    walletAddress: string
+    score?: number
+    transactionCount?: number
+    gameId: number | null
+    gameName: string
+    rank: number
+}
+
