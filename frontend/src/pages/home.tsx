@@ -59,7 +59,7 @@ export const HomePage: FC<{ gameFullState: GameFullState }> = ({ gameFullState }
         const moveFlyLoop = () => {
             moveFly();
 
-            timer = setTimeout(moveFlyLoop, 3000 + Math.random() * 3000);
+            timer = setTimeout(moveFlyLoop, 1000 + Math.random() * 3000);
         }
 
         moveFlyLoop();

@@ -22,7 +22,7 @@ export const generateLevelConfig = (level: number): LevelConfig => {
         return {
             knivesToThrow: Math.min(8 + Math.floor(level / 5), 15),
             preKnives: Math.min(3 + Math.floor(level / 3), 8),
-            appleCount: Math.min(2 + Math.floor(level / 10), 4),
+            appleCount: Math.round(Math.min(2 + Math.random()*3 + Math.floor(level / 10), 5)),
             rotationSpeed: Math.min(3 + level * 0.1, 3),
             targetType: 'lemon',
             isBoss: true,
@@ -33,7 +33,7 @@ export const generateLevelConfig = (level: number): LevelConfig => {
     return {
         knivesToThrow: Math.min(6 + Math.floor(level / 2), 12),
         preKnives: Math.min(Math.floor(level / 2), 6),
-        appleCount: Math.min(1 + Math.floor(level / 5), 3),
+        appleCount: Math.round(Math.min(1 + Math.random()*3 + Math.floor(level / 5), 6)),
         rotationSpeed: Math.min(20 + level * 0.05, 2),
         targetType: 'wood',
         isBoss: false,

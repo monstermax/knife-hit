@@ -4,6 +4,7 @@ import { updatePlayerData } from '@/utils/backend_api';
 import { getUserAddress } from '@/utils/gameUtils';
 
 import type { GameState } from '../types/game';
+import { Apple } from '@/components/svg';
 
 
 interface GameOverlayProps {
@@ -70,7 +71,7 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
                         {gameState.totalApples > 0 && (
                             <div className="bg-purple-500/20 backdrop-blur-sm px-4 py-2 rounded-full border border-purple-400/30">
                                 <div className="text-purple-200 font-medium">
-                                    🍎 Apples collected: {gameState.totalApples}
+                                    <Apple size={24} /> Apples collected: {gameState.totalApples}
                                 </div>
                             </div>
                         )}
@@ -87,7 +88,9 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
 
                     {/* Header */}
                     <div className="text-center mb-6">
-                        <div className="text-6xl mb-3">💀</div>
+                        <div className="text-6xl mb-3">
+                            <img src="/images/molandak_sad_trans.png" className='m-auto' style={{ height:"90px" }} />
+                        </div>
                         <h2 className="text-4xl font-bold text-red-300 drop-shadow-lg">Game Over!</h2>
                     </div>
 
@@ -124,7 +127,7 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
                         {/* Secondary stats */}
                         <div className="grid grid-cols-3 gap-4 mt-4 pt-4 border-t border-white/10">
                             <div className="text-center">
-                                <div className="text-lg font-bold text-indigo-400">{gameState.totalApples} 🍎</div>
+                                <div className="text-lg font-bold text-indigo-400">{gameState.totalApples} <Apple size={24} /></div>
                                 <div className="text-xs text-gray-400">Apples</div>
                             </div>
                             <div className="text-center">
@@ -172,7 +175,7 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
                                 {gameState.totalApples > 0 && (
                                     <>
                                         <span className="text-purple-400">•</span>
-                                        <span className="text-indigo-400">{gameState.totalApples} 🍎</span>
+                                        <span className="text-indigo-400">{gameState.totalApples} <Apple size={24} /></span>
                                     </>
                                 )}
                             </div>

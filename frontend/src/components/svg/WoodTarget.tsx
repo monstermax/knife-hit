@@ -86,13 +86,23 @@ export const WoodTarget: React.FC<WoodTargetProps> = ({
                 strokeWidth="2"
             />
 
-            {/* Center dot */}
-            <circle
-                cx={center}
-                cy={center}
-                r={radius * 0.05}
-                fill="#8B4513"
-            />
+            {/* Center Monad logo */}
+            <foreignObject
+                x={center - radius * 0.15}
+                y={center - radius * 0.15}
+                width={radius * 0.3}
+                height={radius * 0.3}
+            >
+                <img
+                    src="/images/logo_monad.webp"
+                    alt="Monad"
+                    style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'contain'
+                    }}
+                />
+            </foreignObject>
 
             {/* Wood grain lines */}
             <g opacity="0.3">
