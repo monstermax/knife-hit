@@ -19,6 +19,7 @@ export interface AppleItem {
     angle: number;
     position: Position;
     collected: boolean;
+    type: 'apple' | 'john' | 'mouch';
 }
 
 export type GameFullState = {

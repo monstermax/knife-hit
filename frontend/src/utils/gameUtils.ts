@@ -97,11 +97,17 @@ export const generateApples = (count: number, plantedKnives: PlantedKnife[]): Ap
             ))
         );
 
+        let rand = Math.random();
+        let type: AppleItem['type'] = 'apple';
+        if (rand < 0.7) type = 'john';
+        if (rand < 0.3) type = 'mouch';
+
         apples.push({
             id: `apple-${i}`,
             angle,
             position: angleToPosition(angle, GAME_CONFIG.TARGET_RADIUS - 20),
             collected: false,
+            type,
         });
     }
 

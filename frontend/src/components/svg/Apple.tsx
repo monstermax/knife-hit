@@ -15,10 +15,6 @@ export const Apple: React.FC<AppleProps> = ({
     const height = size * 1.1;
 
     return (
-        <img src="/images/JohnWRichKid.png" style={{ width: `${width}px`, height: `${height}px`, margin: 'auto' }} />
-    );
-
-    return (
         <svg
             width={width}
             height={height}

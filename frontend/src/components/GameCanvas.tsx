@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { WoodTarget, LemonTarget, Knife, Apple } from './svg';
+import { WoodTarget, LemonTarget, Knife, Apple, John, Mouch } from './svg';
 import { GAME_CONFIG } from '../utils/gameUtils';
 
 import type { GameState, ThrowingKnife } from '../types/game';
@@ -85,7 +85,17 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({
                         zIndex: -20,
                     }}
                 >
-                    <Apple size={50} />
+                    {apple.type === 'apple' && (
+                        <Apple size={50} />
+                    )}
+
+                    {apple.type === 'john' && (
+                        <John size={50} />
+                    )}
+
+                    {apple.type === 'mouch' && (
+                        <Mouch size={50} />
+                    )}
                 </div>
             )
         ));

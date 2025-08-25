@@ -149,7 +149,7 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
 
                         {/* Icon */}
                         <div className="text-center text-8xl mb-4">
-                            {gameState.isBossLevel ? '👑' : '✨'}
+                            <img src="/images/pepe.gif" style={{ height: '150px', margin: 'auto' }} />
                         </div>
 
                         {/* Title */}
