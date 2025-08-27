@@ -34,6 +34,17 @@ type LeaderboardEntry = {
     rank: number
 }
 
+type PlayerStat = {
+  userId: number
+  username: string
+  walletAddress: string
+  transactionCount: number
+  gameId: number
+  gameName: string
+  rank: number
+  score: number
+};
+
 
 const gameId = 104; // old = 44
 
@@ -82,17 +93,9 @@ const publicClient = createPublicClient({
 });
 
 
+console.log(`Using wallet ${walletClient.account.address}`)
 
-type PlayerStat = {
-  userId: number
-  username: string
-  walletAddress: string
-  transactionCount: number
-  gameId: number
-  gameName: string
-  rank: number
-  score: number
-};
+
 
 async function tmpFixLeaderboard() {
     const playersStat: PlayerStat[] = (await import(`${__dirname}/../tmp_old_leaderboard.json`)).default;
