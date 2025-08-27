@@ -17,16 +17,17 @@ export const GAME_CONFIG = {
 
 export const generateLevelConfig = (level: number): LevelConfig => {
     const isBoss = level % 5 === 0;
+    const clockwise = (Math.random() < 0.5);
 
     if (isBoss) {
         return {
             knivesToThrow: Math.min(8 + Math.floor(level / 5), 15),
             preKnives: Math.min(3 + Math.floor(level / 3), 8),
             appleCount: Math.round(Math.min(2 + Math.random()*3 + Math.floor(level / 10), 5)),
-            rotationSpeed: Math.min(3 + level * 0.1, 3),
+            rotationSpeed: Math.min(3 + level * 0.1, 3) * (clockwise ? 1 : -1),
             targetType: 'lemon',
             isBoss: true,
-            cycle: { duration: 5000, min: 0.5, max: 2 + level * 0.1, clockwise: true },
+            cycle: { duration: 5000, min: 0.5, max: 2 + level * 0.1, clockwise },
         };
     }
 
@@ -34,10 +35,10 @@ export const generateLevelConfig = (level: number): LevelConfig => {
         knivesToThrow: Math.min(6 + Math.floor(level / 2), 12),
         preKnives: Math.min(Math.floor(level / 2), 6),
         appleCount: Math.round(Math.min(1 + Math.random()*3 + Math.floor(level / 5), 6)),
-        rotationSpeed: Math.min(20 + level * 0.05, 2),
+        rotationSpeed: Math.min(20 + level * 0.05, 2) * (clockwise ? 1 : -1),
         targetType: 'wood',
         isBoss: false,
-        cycle: { duration: 5000, min: 0.5, max: 1.5 + level * 0.1, clockwise: true },
+        cycle: { duration: 5000, min: 0.5, max: 1.5 + level * 0.1, clockwise },
     };
 
     // TODO: "cycles" a implémenter
