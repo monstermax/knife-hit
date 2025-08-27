@@ -41,7 +41,7 @@ export const generateLevelConfig = (level: number): LevelConfig => {
         cycle: { duration: 5000, min: 0.5, max: 1.5 + level * 0.1, clockwise },
     };
 
- ;
+};
 
 
 export const generateRandomAngle = (): number => {
