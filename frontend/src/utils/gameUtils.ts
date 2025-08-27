@@ -41,9 +41,7 @@ export const generateLevelConfig = (level: number): LevelConfig => {
         cycle: { duration: 5000, min: 0.5, max: 1.5 + level * 0.1, clockwise },
     };
 
-    // TODO: "cycles" a implémenter
-    // toutes un cycle dure ${duration} milliseconds, pendant lequel la vitesse de rotation va evoluer de ${min} à ${max} ou de ${max} à ${min}
-};
+ ;
 
 
 export const generateRandomAngle = (): number => {
