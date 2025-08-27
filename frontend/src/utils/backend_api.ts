@@ -9,8 +9,8 @@ export const registerGame = (): Promise<any> => {
     const apiUrl = `${apiEndpoint}/api/registerGame`;
 
     const data = {
-        name: 'Knife Hit',
-        image: '🔪',
+        name: 'Monad Knife Hit',
+        image: 'https://knife.karmas.fr/favicon.png',
         url: 'https://knife.karmas.fr/',
     };
 

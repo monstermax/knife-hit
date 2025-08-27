@@ -103,7 +103,7 @@ export const HomePage: FC<{ gameFullState: GameFullState }> = ({ gameFullState }
                 {/* Title */}
                 <div className="space-y-4">
                     <h1 className="text-5xl font-bold text-purple-400 mb-2">
-                        🔪 Knife Hit
+                        🔪 Monad Knife Hit
                     </h1>
                     <p className="text-gray-300 text-lg">
                         Hit the target, avoid the knives.

@@ -1,0 +1,102 @@
+[
+    {
+        "userId": 44,
+        "username": "yomax",
+        "walletAddress": "0xc5B87949A8F1d503468A519797799FaA677ae33F",
+        "transactionCount": 682,
+        "gameId": 44,
+        "gameName": "Knife Hit",
+        "rank": 1,
+        "score": 602630
+    },
+    {
+        "userId": 23,
+        "username": "Maxis",
+        "walletAddress": "0x97f4bd5497F59975910e7D8a5D6eC3CBf4EA49E1",
+        "transactionCount": 34,
+        "gameId": 44,
+        "gameName": "Knife Hit",
+        "rank": 2,
+        "score": 17540
+    },
+    {
+        "userId": 239,
+        "username": "Violennn",
+        "walletAddress": "0x90dC357F4488af5AD6eC41569749350c735Fb61a",
+        "transactionCount": 24,
+        "gameId": 44,
+        "gameName": "Knife Hit",
+        "rank": 3,
+        "score": 26140
+    },
+    {
+        "userId": 41,
+        "username": "zekav",
+        "walletAddress": "0x8240463FB430c6b1a80718d3764282ead4c2D999",
+        "transactionCount": 24,
+        "gameId": 44,
+        "gameName": "Knife Hit",
+        "rank": 4,
+        "score": 9270
+    },
+    {
+        "userId": 12,
+        "username": "AnonAmosAdmn",
+        "walletAddress": "0xFeA3972cA83B409831a614BFe42a4144d74A6499",
+        "transactionCount": 16,
+        "gameId": 44,
+        "gameName": "Knife Hit",
+        "rank": 5,
+        "score": 12790
+    },
+    {
+        "userId": 69,
+        "username": "Agatha",
+        "walletAddress": "0x443979c1524C4D6e0cA3bC1Bd4AFefBd44BaF860",
+        "transactionCount": 14,
+        "gameId": 44,
+        "gameName": "Knife Hit",
+        "rank": 6,
+        "score": 5530
+    },
+    {
+        "userId": 29,
+        "username": "cassini",
+        "walletAddress": "0xEB9bFb724dbef0b26db6C0440Aa354074b5aE611",
+        "transactionCount": 12,
+        "gameId": 44,
+        "gameName": "Knife Hit",
+        "rank": 7,
+        "score": 2620
+    },
+    {
+        "userId": 4,
+        "username": "sifu",
+        "walletAddress": "0xEf8fdE66488d74091029f5C1E3DF4CfE2C26b6dC",
+        "transactionCount": 12,
+        "gameId": 44,
+        "gameName": "Knife Hit",
+        "rank": 8,
+        "score": 5990
+    },
+    {
+        "userId": 57,
+        "username": "xurry",
+        "walletAddress": "0x3E828d6B4E0cca607af47C5F9a735E5884a32953",
+        "transactionCount": 10,
+        "gameId": 44,
+        "gameName": "Knife Hit",
+        "rank": 9,
+        "score": 13690
+    },
+    {
+        "userId": 64,
+        "username": "Kurayss",
+        "walletAddress": "0x3B15fea6484D0444529F83d353b13D86b9308eb6",
+        "transactionCount": 6,
+        "gameId": 44,
+        "gameName": "Knife Hit",
+        "rank": 10,
+        "score": 0
+    }
+]

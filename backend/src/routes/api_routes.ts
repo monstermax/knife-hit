@@ -35,7 +35,7 @@ type LeaderboardEntry = {
 }
 
 
-const gameId = 44;
+const gameId = 104; // old = 44
 
 
 function getPrivateKey(): `0x${string}` {
@@ -81,6 +81,44 @@ const publicClient = createPublicClient({
     transport: http()
 });
 
+
+
+type PlayerStat = {
+  userId: number
+  username: string
+  walletAddress: string
+  transactionCount: number
+  gameId: number
+  gameName: string
+  rank: number
+  score: number
+};
+
+async function tmpFixLeaderboard() {
+    const playersStat: PlayerStat[] = (await import(`${__dirname}/../tmp_old_leaderboard.json`)).default;
+
+    for (const playerStat of playersStat) {
+        const { walletAddress, score, transactionCount } = playerStat;
+
+        const { request } = await publicClient.simulateContract({
+            account,
+            address: CONTRACT_ADDRESS,
+            abi: LEADERBOARD_ABI,
+            functionName: 'updatePlayerData',
+            args: [walletAddress, score, transactionCount],
+        });
+
+        console.log('request:', request)
+
+        const hash = await walletClient.writeContract(request);
+        const receipt = await publicClient.waitForTransactionReceipt({ hash });
+
+    }
+}
+
+
+
+//tmpFixLeaderboard();
 
 
 // API ROUTES
