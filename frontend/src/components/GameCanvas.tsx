@@ -11,6 +11,7 @@ import { TargetGold } from '@/components/svg/TargetGold';
 import { TargetCrystal } from '@/components/svg/TargetCrystal';
 import { TargetWatermelon } from '@/components/svg/TargetWatermelon';
 import { TargetCheese } from '@/components/svg/TargetCheese';
+import { MemeImage } from '@/components/svg/MemeImage';
 
 
 interface GameCanvasProps {
@@ -114,13 +115,10 @@ export const GameCanvas: React.FC<GameCanvasProps> = ({
                         <Apple size={50} />
                     )}
 
-                    {apple.type === 'john' && (
-                        <John size={50} />
+                    {apple.type !== 'apple' && (
+                        <MemeImage memeType={apple.type} size={50} />
                     )}
 
-                    {apple.type === 'mouch' && (
-                        <Mouch size={50} />
-                    )}
                 </div>
             )
         ));

@@ -98,8 +98,12 @@ export const generateApples = (count: number, plantedKnives: PlantedKnife[]): Ap
 
         let rand = Math.random();
         let type: AppleItem['type'] = 'apple';
-        if (rand < 0.7) type = 'john';
-        if (rand < 0.3) type = 'mouch';
+        if (rand < 1)   type = 'john';
+        if (rand < 0.7) type = 'mouch';
+        if (rand < 0.5) type = 'pepe';
+        if (rand < 0.3) type = 'bill';
+        if (rand < 0.2) type = 'port';
+        if (rand < 0.1) type = 'keone';
 
         apples.push({
             id: `apple-${i}`,

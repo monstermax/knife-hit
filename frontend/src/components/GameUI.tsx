@@ -3,6 +3,7 @@ import React from 'react';
 import { Apple } from './svg';
 
 import type { GameState } from '../types/game';
+import { MemeImage } from '@/components/svg/MemeImage';
 
 
 interface GameUIProps {
@@ -48,7 +49,7 @@ export const GameUI: React.FC<GameUIProps> = ({ gameState, onQuitGame }) => {
         {/* Apple counter */}
         <div className="bg-black/25 backdrop-blur-sm px-3 py-2 rounded-xl border border-indigo-400/30 shadow-lg">
           <div className="apple-display flex items-center gap-2">
-            <Apple size={20} />
+            <MemeImage memeType={`john`} size={20} />
             <span className="text-lg font-bold text-indigo-300 drop-shadow-lg">{gameState.totalApples}</span>
           </div>
         </div>

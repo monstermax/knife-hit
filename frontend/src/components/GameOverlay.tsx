@@ -5,6 +5,7 @@ import { getUserAddress } from '@/utils/gameUtils';
 
 import type { GameState } from '../types/game';
 import { Apple } from '@/components/svg';
+import { MemeImage } from '@/components/svg/MemeImage';
 
 
 interface GameOverlayProps {
@@ -50,6 +51,7 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
 
 
     if (gameState.gameStatus === 'home') {
+        // DEPRECATED
         return (
             <div className="game-over-overlay select-none">
                 <div className="backdrop-blur-md bg-black/40 p-8 rounded-3xl border border-purple-500/20 shadow-2xl max-w-md mx-auto">
@@ -71,7 +73,7 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
                         {gameState.totalApples > 0 && (
                             <div className="bg-purple-500/20 backdrop-blur-sm px-4 py-2 rounded-full border border-purple-400/30">
                                 <div className="text-purple-200 font-medium">
-                                    <Apple size={24} /> Bonus collected: {gameState.totalApples}
+                                    <MemeImage memeType={`john`} size={24} /> Bonus collected: {gameState.totalApples}
                                 </div>
                             </div>
                         )}
@@ -95,19 +97,28 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="flex gap-3">
+                    <div>
                         <button
                             onClick={onBackHome}
                             className="flex-1 bg-gradient-to-r from-slate-700 to-slate-800 hover:from-slate-600 hover:to-slate-700 text-white font-bold py-3 px-4 rounded-2xl transition-all duration-200 transform hover:scale-105 shadow-lg text-sm cursor-pointer"
                         >
-                            🏠 Home
+                            Home
+                        </button>
+                    </div>
+                    <div className="flex gap-3">
+                        <button
+                            disabled={false}
+                            onClick={onResetGame}
+                            className="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold py-3 px-4 rounded-2xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl text-sm cursor-pointer"
+                        >
+                            Continue (-10 <MemeImage memeType='john' size={20} />)
                         </button>
 
                         <button
                             onClick={onResetGame}
                             className="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold py-3 px-4 rounded-2xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl text-sm cursor-pointer"
                         >
-                            🔄 Try Again
+                            Try Again
                         </button>
                     </div>
 
@@ -122,10 +133,7 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
                                 <div className="text-2xl font-bold text-purple-400">{gameState.score}</div>
                                 <div className="text-xs text-gray-300">Score</div>
                             </div>
-                            <div>
-                                <div className="text-lg font-bold text-indigo-400">{gameState.totalApples} <Apple size={20} /></div>
-                                <div className="text-xs text-gray-400"></div>
-                            </div>
+                            <div></div>
                             <div>
                                 <div className="text-lg font-bold text-purple-300">{gameState.bestLevel}</div>
                                 <div className="text-xs text-purple-300">Best Lv</div>
@@ -171,7 +179,7 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
                                 {gameState.totalApples > 0 && (
                                     <>
                                         <span className="text-purple-400">•</span>
-                                        <span className="text-indigo-400">{gameState.totalApples} <Apple size={24} /></span>
+                                        <span className="text-indigo-400">{gameState.totalApples} <MemeImage memeType={`john`} size={24} /></span>
                                     </>
                                 )}
                             </div>
