@@ -37,6 +37,7 @@ export type GameFullState = {
     startGame: (playerAddress?: string | null) => void;
     nextLevel: () => void;
     throwKnife: () => void;
+    continueGame: () => void;
     resetGame: () => void;
     pauseGame: () => void;
     unpauseGame: () => void;
@@ -52,6 +53,7 @@ export interface GameState {
     playerAddress: string | null,
     level: number;
     score: number;
+    scoreAtLevelBegin: number;
     totalApples: number;
     knivesRemaining: number;
     plantedKnives: PlantedKnife[];

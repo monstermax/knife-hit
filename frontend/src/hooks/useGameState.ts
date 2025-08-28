@@ -5,6 +5,9 @@ import { generateLevelConfig, generatePreKnives, generateApples, checkKnifeColli
 import { CrossAppAccountWithMetadata, useConnectWallet, usePrivy } from '@privy-io/react-auth';
 
 
+const continueCost = 10;
+
+
 export const useGameState = (): GameFullState => {
 
     const [gameState, setGameState] = useState<GameState>(() => {
@@ -22,6 +25,7 @@ export const useGameState = (): GameFullState => {
             playerAddress: null,
             level: 1,
             score: 0,
+            scoreAtLevelBegin: 0,
             totalApples,
             knivesRemaining: 6,
             plantedKnives: [],
@@ -64,6 +68,7 @@ export const useGameState = (): GameFullState => {
         localStorage.setItem('knife-hit-bestlevel', gameState.bestLevel.toString());
     }, [gameState.bestLevel]);
 
+
     // Animation de rotation avec cycle
     useEffect(() => {
         if (gameState.gameStatus !== 'playing') {
@@ -96,9 +101,9 @@ export const useGameState = (): GameFullState => {
                 );
 
                 // Debug optionnel
-                if (process.env.NODE_ENV === 'development') {
-                    console.log(`Cycle ${cycleInfo.cycleNumber}, Progress: ${cycleInfo.progress.toFixed(2)}, Multiplier: ${cycleMultiplier.toFixed(2)}`);
-                }
+                //if (process.env.NODE_ENV === 'development') {
+                //    console.log(`Cycle ${cycleInfo.cycleNumber}, Progress: ${cycleInfo.progress.toFixed(2)}, Multiplier: ${cycleMultiplier.toFixed(2)}`);
+                //}
 
                 // Appliquer la rotation avec le cycle
                 const rotationDelta = prev.rotationSpeed * deltaTime * 50 * cycleMultiplier;
@@ -150,6 +155,7 @@ export const useGameState = (): GameFullState => {
 
     }, [authenticated, user, ready]);
 
+
     const fetchUsername = async (walletAddress: string) => {
         setLoading(true);
         setError("");
@@ -170,6 +176,7 @@ export const useGameState = (): GameFullState => {
         }
     };
 
+
     const handleCreateWallet = async () => {
         try {
             await connectWallet();
@@ -179,9 +186,10 @@ export const useGameState = (): GameFullState => {
         }
     };
 
-    const startGame = (playerAddress?: string | null) => {
+
+    const startGame = (playerAddress?: string | null, level=1, score=0, cost=0) => {
         playerAddress = playerAddress ?? null;
-        const levelConfig = generateLevelConfig(1);
+        const levelConfig = generateLevelConfig(level);
         const preKnives = generatePreKnives(levelConfig.preKnives);
         const apples = generateApples(levelConfig.appleCount, preKnives);
 
@@ -190,10 +198,12 @@ export const useGameState = (): GameFullState => {
 
         setGameState(prev => ({
             ...prev,
-            level: 1,
-            score: 0,
+            level,
+            score,
+            scoreAtLevelBegin: score,
             knivesRemaining: levelConfig.knivesToThrow,
             plantedKnives: preKnives,
+            totalApples: prev.totalApples - cost,
             apples,
             targetRotation: 0,
             rotationSpeed: levelConfig.rotationSpeed,
@@ -208,12 +218,14 @@ export const useGameState = (): GameFullState => {
         levelStartTimeRef.current = 0;
     };
 
+
     const pauseGame = useCallback(() => {
         setGameState(prev => ({
             ...prev,
             gameStatus: 'pause',
         }));
     }, []);
+
 
     const unpauseGame = useCallback(() => {
         setGameState(prev => ({
@@ -222,6 +234,7 @@ export const useGameState = (): GameFullState => {
         }));
         startTimeRef.current = 0;
     }, []);
+
 
     const nextLevel = useCallback(() => {
         const nextLevelNum = gameState.level + 1;
@@ -235,6 +248,7 @@ export const useGameState = (): GameFullState => {
             knivesRemaining: levelConfig.knivesToThrow,
             plantedKnives: preKnives,
             apples,
+            scoreAtLevelBegin: gameState.score,
             targetRotation: 0,
             rotationSpeed: levelConfig.rotationSpeed,
             gameStatus: 'playing',
@@ -244,7 +258,8 @@ export const useGameState = (): GameFullState => {
 
         startTimeRef.current = 0;
         levelStartTimeRef.current = 0;
-    }, [gameState.level]);
+    }, [gameState.level, gameState.score]);
+
 
     const quitGame = useCallback(() => {
         setGameState(prev => ({
@@ -256,6 +271,15 @@ export const useGameState = (): GameFullState => {
         }));
         setThrowingKnives([]);
     }, []);
+
+
+    const continueGame = () => {
+        console.log('continueGame with accountAddress', gameState.playerAddress)
+        const level = gameState.level;
+        const score = gameState.scoreAtLevelBegin;
+        startGame(gameState.playerAddress, level, score, continueCost)
+    };
+
 
     const resetGame = () => {
         console.log('resetGame with accountAddress', gameState.playerAddress)
@@ -384,6 +408,7 @@ export const useGameState = (): GameFullState => {
         startGame,
         nextLevel,
         throwKnife,
+        continueGame,
         resetGame,
         pauseGame,
         unpauseGame,

@@ -1,17 +1,16 @@
 import React, { useEffect } from 'react';
 
-import { updatePlayerData } from '@/utils/backend_api';
-import { getUserAddress } from '@/utils/gameUtils';
+import { updatePlayerData } from '../utils/backend_api';
+import { MemeImage } from '../components/svg/MemeImage';
 
 import type { GameState } from '../types/game';
-import { Apple } from '@/components/svg';
-import { MemeImage } from '@/components/svg/MemeImage';
 
 
 interface GameOverlayProps {
     gameState: GameState;
     onStartGame: () => void;
     onNextLevel: () => void;
+    onContinueGame: () => void;
     onResetGame: () => void;
     pauseGame: () => void;
     unpauseGame: () => void;
@@ -21,11 +20,14 @@ interface GameOverlayProps {
 
 const debug = false;
 
+const continueCost = 10;
+
 
 export const GameOverlay: React.FC<GameOverlayProps> = ({
     gameState,
     onStartGame,
     onNextLevel,
+    onContinueGame,
     onResetGame,
     pauseGame,
     unpauseGame,
@@ -97,21 +99,15 @@ export const GameOverlay: React.FC<GameOverlayProps> = ({
                     </div>
 
                     {/* Action Buttons */}
-                    <div>
-                        <button
-                            onClick={onBackHome}
-                            className="flex-1 bg-gradient-to-r from-slate-700 to-slate-800 hover:from-slate-600 hover:to-slate-700 text-white font-bold py-3 px-4 rounded-2xl transition-all duration-200 transform hover:scale-105 shadow-lg text-sm cursor-pointer"
-                        >
-                            Home
-                        </button>
-                    </div>
                     <div className="flex gap-3">
                         <button
-                            disabled={false}
-                            onClick={onResetGame}
+                            disabled={gameState.level <= 1 || gameState.totalApples < continueCost}
+                            onClick={onContinueGame}
                             className="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold py-3 px-4 rounded-2xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl text-sm cursor-pointer"
                         >
-                            Continue (-10 <MemeImage memeType='john' size={20} />)
+                            Restart Level
+                            <br />
+                            <small>(Cost <MemeImage memeType='john' size={20} className='inline-block' /> x10)</small>
                         </button>
 
                         <button
