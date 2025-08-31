@@ -46,7 +46,7 @@ type PlayerStat = {
 };
 
 
-const gameId = 104; // old = 44
+const gameId = 215; // old = 44 & 104
 
 
 function getPrivateKey(): `0x${string}` {
@@ -220,7 +220,7 @@ apiRouter.get('/games', async (req: Request, res: Response) => {
 // Route GET /api/leaderboard
 apiRouter.get('/leaderboard', async (req: Request, res: Response) => {
     try {
-        let sortBy = "scores";
+        //let sortBy = "scores";
         let page = 1;
 
         let leaderboard;
