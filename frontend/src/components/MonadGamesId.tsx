@@ -9,6 +9,10 @@ type MonadGamesIdProps = {
 }
 
 
+//const monadGamesIdEndpoint = `https://monad-games-id-site.vercel.app`;
+const monadGamesIdEndpoint = `https://www.monadclip.fun`;
+
+
 export const MonadGamesId: FC<MonadGamesIdProps> = ({ gameFullState }) => {
 
     const { authenticated, ready, accountAddress, error, loading, username, logout, handleCreateWallet } = gameFullState;
@@ -35,7 +39,7 @@ export const MonadGamesId: FC<MonadGamesIdProps> = ({ gameFullState }) => {
             <div className="flex items-center gap-2 mb-4">
                 <h3 className="text-lg font-bold text-white">🎮 Monad Games ID</h3>
                 <a
-                    href="https://monad-games-id-site.vercel.app/"
+                    href={`${monadGamesIdEndpoint}/`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-purple-400 hover:text-purple-300 transition-colors"
@@ -66,7 +70,7 @@ export const MonadGamesId: FC<MonadGamesIdProps> = ({ gameFullState }) => {
                                 <div className="no-username bg-indigo-700/70 p-3 rounded flex-1">
                                     <div className="text-indigo-100 text-sm mb-2">No username registered</div>
                                     <a
-                                        href="https://monad-games-id-site.vercel.app/"
+                                        href={`${monadGamesIdEndpoint}/`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="inline-block bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1 rounded text-sm transition-colors"

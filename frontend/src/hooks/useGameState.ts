@@ -7,6 +7,9 @@ import { CrossAppAccountWithMetadata, useConnectWallet, usePrivy } from '@privy-
 
 const continueCost = 10;
 
+//const monadGamesIdEndpoint = `https://monad-games-id-site.vercel.app`;
+const monadGamesIdEndpoint = `https://www.monadclip.fun`;
+
 
 export const useGameState = (): GameFullState => {
 
@@ -160,8 +163,10 @@ export const useGameState = (): GameFullState => {
         setLoading(true);
         setError("");
 
+        const apiUrl = `${monadGamesIdEndpoint}/api/check-wallet?wallet=${walletAddress}`;
+
         try {
-            const response = await fetch(`https://monad-games-id-site.vercel.app/api/check-wallet?wallet=${walletAddress}`);
+            const response = await fetch(apiUrl);
             if (response.ok) {
                 const data = await response.json();
                 setUsername(data.hasUsername ? data.user.username : "");

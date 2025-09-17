@@ -7,7 +7,7 @@ import { privateKeyToAccount } from 'viem/accounts';
 
 import { monadTestnet } from '../config/network';
 
-import LEADERBOARD_ABI from '../contract/leaderboard.json';
+import LEADERBOARD_ABI from '../contract/Leaderboard2.json';
 
 
 type LeaderboardResult = {
@@ -46,7 +46,7 @@ type PlayerStat = {
 };
 
 
-const gameId = 215; // old = 44 & 104
+const gameId = 13; // old = 44 & 104 & 215
 
 
 function getPrivateKey(): `0x${string}` {
@@ -73,7 +73,12 @@ if (!privateKey) {
     process.exit(1);
 }
 
-const CONTRACT_ADDRESS = '0xceCBFF203C8B6044F52CE23D914A1bfD997541A4'; // Leaderboard => https://testnet.monadexplorer.com/address/0xceCBFF203C8B6044F52CE23D914A1bfD997541A4?tab=Contract
+// Leaderboard => https://testnet.monadexplorer.com/address/0xceCBFF203C8B6044F52CE23D914A1bfD997541A4?tab=Contract
+const CONTRACT_ADDRESS = process.env.LEADERBOARD_ADDRESS as `0x${string}` ?? '0xceCBFF203C8B6044F52CE23D914A1bfD997541A4';
+
+//const monadGamesIdEndpoint = `https://monad-games-id-site.vercel.app`;
+const monadGamesIdEndpoint = `https://www.monadclip.fun`;
+
 
 const usedTokens: number[] = [];
 
@@ -217,6 +222,7 @@ apiRouter.get('/games', async (req: Request, res: Response) => {
     }
 });
 
+
 // Route GET /api/leaderboard
 apiRouter.get('/leaderboard', async (req: Request, res: Response) => {
     try {
@@ -226,13 +232,13 @@ apiRouter.get('/leaderboard', async (req: Request, res: Response) => {
         let leaderboard;
 
         {
-            const url = `https://monad-games-id-site.vercel.app/api/leaderboard?page=${page}&gameId=${gameId}`;
+            const url = `${monadGamesIdEndpoint}/api/leaderboard?page=${page}&gameId=${gameId}`;
             const response = await fetch(url);
             leaderboard = await response.json() as LeaderboardResult;
         }
 
         {
-            const url = `https://monad-games-id-site.vercel.app/api/leaderboard?page=${page}&gameId=${gameId}&sortBy=scores`;
+            const url = `${monadGamesIdEndpoint}/api/leaderboard?page=${page}&gameId=${gameId}&sortBy=scores`;
             const response = await fetch(url);
             const leaderboardScores = await response.json() as LeaderboardResult;
 
@@ -279,7 +285,7 @@ apiRouter.post('/registerGame', async (req: Request, res: Response) => {
         });
 
         const hash = await walletClient.writeContract(request);
-        const receipt = await publicClient.waitForTransactionReceipt({ hash });
+        const receipt = await publicClient.waitForTransactionReceipt({ hash, timeout: 10_000 });
 
         //console.log('registerGame receipt:', receipt)
 
@@ -324,7 +330,7 @@ apiRouter.post('/updatePlayerData', async (req: Request, res: Response) => {
             address: CONTRACT_ADDRESS,
             abi: LEADERBOARD_ABI,
             functionName: 'updatePlayerData',
-            args: [player, scoreAmount, transactionAmount],
+            args: [{ player, score: scoreAmount, transactions: transactionAmount }],
         });
 
         const hash = await walletClient.writeContract(request);
